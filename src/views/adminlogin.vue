@@ -102,12 +102,18 @@ export default {
           const response = await auth.login(this.loginForm);
           if (response) {
             localStorage.setItem("token", response.access_token);
-            this.$router.push("/capstone-directory");
+            console.log("pasok");
+
+            const me = await auth.me();
+            if (me) {
+              localStorage.setItem("role", me.role);
+              this.$router.push("/capstone-directory");
+            }
           }
         } catch (error) {
-          this.error = error.response.data.message
-            ? error.response.data.message
-            : error.response.data;
+          this.error = error.response?.data?.message
+            ? error.response?.data?.message
+            : error.response?.data;
         } finally {
           this.isLoading = false;
         }

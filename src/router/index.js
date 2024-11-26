@@ -21,6 +21,9 @@ const router = createRouter({
           path: "/capstone-directory",
           name: "home",
           component: home,
+          meta: {
+            requiresAuth: true,
+          },
         },
         ...adminroutes,
       ],
@@ -46,6 +49,48 @@ const router = createRouter({
       component: resetpassword,
     },
   ],
+});
+
+router.beforeEach((to, from, next) => {
+  const requiresAuth = to.meta.requiresAuth || false; // Default to false if meta is undefined
+  const token = localStorage.getItem("token"); // Auth token
+  const role = localStorage.getItem("role"); // User role
+
+  console.log(token);
+
+  if (requiresAuth && !token) {
+    // Redirect unauthenticated users to the login page
+    return next({ name: "login" });
+  }
+
+  if (!requiresAuth && token) {
+    // Prevent logged-in users from accessing unauthenticated routes like login
+    if (role === "administrator") {
+      return next("/capstone-directory");
+    } else if (role === "student") {
+      return next("/capstone-directory");
+    }
+  }
+
+  // Handle role-based redirection for authenticated users
+  if (token && role) {
+    if (role === "administrator") {
+      // Allow admins to access all routes
+      return next();
+    } else if (role === "student") {
+      // Restrict students to specific routes
+      if (to.path !== "/capstone-directory") {
+        return next("/capstone-directory"); // Redirect students to their home
+      }
+    } else {
+      // If the role is unrecognized, clear storage and redirect to login
+      localStorage.clear();
+      return next({ name: "login" });
+    }
+  }
+
+  // Default fallback to proceed with navigation
+  next();
 });
 
 export default router;

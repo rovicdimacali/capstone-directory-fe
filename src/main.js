@@ -8,6 +8,7 @@ import PrimeVue from "primevue/config";
 import "primeicons/primeicons.css";
 
 import ToastService from "primevue/toastservice";
+import ConfirmationService from "primevue/confirmationservice";
 
 import Material from "@primevue/themes/material";
 import { definePreset } from "@primevue/themes";
@@ -42,6 +43,7 @@ app.use(PrimeVue, {
 });
 
 app.use(ToastService);
+app.use(ConfirmationService);
 
 Object.keys(components).forEach((componentName) => {
   if (components[componentName].name) {

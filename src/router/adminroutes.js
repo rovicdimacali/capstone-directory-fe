@@ -5,5 +5,8 @@ export const adminroutes = [
     path: "/users",
     name: "users",
     component: users,
+    meta: {
+      requiresAuth: true,
+    },
   },
 ];
