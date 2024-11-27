@@ -19,7 +19,7 @@
       </div>
     </div>
     <div class="user-links col">
-      <p @click="changeVisible = true">Profile</p>
+      <p @click="changeVisible = true">Settings</p>
       <p @click="logout">Logout</p>
     </div>
   </div>
