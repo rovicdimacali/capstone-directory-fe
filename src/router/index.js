@@ -47,6 +47,16 @@ const router = createRouter({
       path: "/reset-password/:code",
       name: "resetpassword",
       component: resetpassword,
+      beforeEnter: (to, from, next) => {
+        // Check if the query parameter 'token' exists
+        if (!to.query.token) {
+          // Redirect to the login page if the token is missing
+          next({ name: "login" }); // Adjust 'login' to the name of your login route
+        } else {
+          // Proceed to the reset password page if the token exists
+          next();
+        }
+      },
     },
   ],
 });
@@ -64,12 +74,7 @@ router.beforeEach((to, from, next) => {
   }
 
   if (!requiresAuth && token) {
-    // Prevent logged-in users from accessing unauthenticated routes like login
-    if (role === "administrator") {
-      return next("/capstone-directory");
-    } else if (role === "student") {
-      return next("/capstone-directory");
-    }
+    return next("/capstone-directory");
   }
 
   // Handle role-based redirection for authenticated users
@@ -79,7 +84,12 @@ router.beforeEach((to, from, next) => {
       return next();
     } else if (role === "student") {
       // Restrict students to specific routes
-      if (to.path !== "/capstone-directory") {
+      if (
+        to.path !== "/capstone-directory" ||
+        to.path !== "/upload" ||
+        to.path !== "/ip-registered" ||
+        to.path !== "/approvals"
+      ) {
         return next("/capstone-directory"); // Redirect students to their home
       }
     } else {

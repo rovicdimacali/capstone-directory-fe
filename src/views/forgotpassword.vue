@@ -11,16 +11,55 @@
         <p>UST-CICS</p>
         <small>Forgot Password</small>
       </div>
-      <form class="col-10">
-        <InputText class="input-user-auth" placeholder="Email" />
-        <Button label="SUBMIT" />
+      <form class="col-10" @submit.prevent="forgotPassword">
+        <InputText
+          v-model="forgotForm.email"
+          class="input-user-auth"
+          placeholder="Email"
+        />
+        <Button label="SUBMIT" type="submit" />
       </form>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import { auth } from "@/api/auth";
+
+export default {
+  data() {
+    return {
+      forgotForm: {
+        email: null,
+      },
+      isLoading: false,
+    };
+  },
+
+  methods: {
+    async forgotPassword() {
+      this.isLoading = true;
+      try {
+        await auth.forgotpassword(this.forgotForm);
+        this.$toast.add({
+          severity: "success",
+          summary: "A reset link was sent to your email.",
+          life: 7000,
+        });
+        this.forgotForm.email = null;
+      } catch (error) {
+        this.$toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: "Something went wrong.",
+          life: 3000,
+        });
+      } finally {
+        this.isLoading = false;
+      }
+    },
+  },
+};
 </script>
 
 <style></style>

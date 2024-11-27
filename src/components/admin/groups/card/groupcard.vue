@@ -1,21 +1,9 @@
 <template>
   <div class="datacard">
-    <assigngroup
-      v-if="assignVisible"
-      :isVisible="assignVisible"
-      :user="users"
-      @close="assignVisible = false"
-      @submit="
-        () => {
-          assignVisible = false;
-          this.$emit('refresh');
-        }
-      "
-    />
-    <updateuser
+    <updategroup
       v-if="updateVisible"
       :isVisible="updateVisible"
-      :user="users"
+      :group="group"
       @close="updateVisible = false"
       @submit="
         () => {
@@ -25,21 +13,15 @@
       "
     />
     <div class="header col">
-      <h3>{{ users?.first_name }} {{ users?.last_name }}</h3>
+      <h3>{{ group?.name }}</h3>
       <p>
-        {{ users?.course ? users?.course : "No Course" }} |
-        <span style="text-transform: capitalize"> {{ users?.role }}</span>
+        A.Y. {{ group?.academic_year }} | {{ group?.course }} |
+        {{ group?.group_members?.length }} members
       </p>
     </div>
 
     <div class="actions-container row">
-      <Button
-        v-if="users.role === 'student'"
-        text
-        label="Assign"
-        class="action-btn"
-        @click="assignVisible = true"
-      />
+      <Button text label="Members" class="action-btn" />
       <Button
         text
         label="Update"
@@ -50,30 +32,29 @@
         text
         label="Delete"
         class="action-btn"
-        @click="deleteUser(users?.id)"
+        @click="deleteGroup(group?.id)"
       />
     </div>
   </div>
 </template>
 
 <script>
-import { users } from "@/api/users";
-import updateuser from "../dialogs/updateuser.vue";
-import assigngroup from "../dialogs/assigngroup.vue";
-export default {
-  props: ["users"],
+import { groups } from "@/api/groups";
+import updategroup from "../dialogs/updategroup.vue";
 
-  components: { updateuser, assigngroup },
+export default {
+  props: ["group"],
+
+  components: { updategroup },
 
   data() {
     return {
-      assignVisible: false,
       updateVisible: false,
     };
   },
 
   methods: {
-    deleteUser(id) {
+    deleteGroup(id) {
       this.$confirm.require({
         message: "Are you sure you want to delete?",
         header: "Confirmation",
@@ -88,11 +69,10 @@ export default {
         },
         accept: async () => {
           try {
-            await users.deleteUser(id);
+            await groups.deleteGroup(id);
             this.$toast.add({
               severity: "success",
-              summary: "Success",
-              detail: "User Deleted Successfully.",
+              summary: "Group Deleted Successfully.",
               life: 3000,
             });
             this.$emit("refresh");

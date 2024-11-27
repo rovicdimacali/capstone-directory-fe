@@ -10,4 +10,14 @@ export const auth = {
     const response = await axios.get("/users/me/");
     return response.data;
   },
+
+  forgotpassword: async (obj) => {
+    const response = await axios.post("/users/forgot-password/", obj);
+    return response.data;
+  },
+
+  resetPassword: async (obj) => {
+    const response = await axios.post("/users/reset-password/", obj);
+    return response.data;
+  },
 };

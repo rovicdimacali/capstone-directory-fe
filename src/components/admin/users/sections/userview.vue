@@ -2,17 +2,31 @@
   <Toast />
   <div class="dataview">
     <div class="search-filter-container wrap">
-      <InputText
-        v-model="search"
-        class="search-input"
-        placeholder="Search"
-        @keyup.enter="handleSearch"
-      />
+      <div class="search-input col-5">
+        <InputText
+          v-model="search"
+          placeholder="Search"
+          @keyup.enter="handleSearch"
+        />
+        <small>Press Enter to Search</small>
+      </div>
+
       <Select
         v-model="selectedCourse"
         :options="courses"
         placeholder="Select Course"
         class="dropdown"
+        @change="handleCourseChange"
+        showClear
+      />
+      <Select
+        v-if="role === 'administrator' || role === 'capstone coordinator'"
+        v-model="selectedRole"
+        :options="roles"
+        placeholder="Select Role"
+        class="dropdown"
+        @change="handleRoleChange"
+        showClear
       />
       <FileUpload
         mode="basic"
@@ -34,7 +48,12 @@
       />
     </div>
     <div v-if="users?.length" class="data-container wrap">
-      <usercard v-for="(user, index) in users" :key="index" :users="user" />
+      <usercard
+        v-for="(user, index) in users"
+        :key="index"
+        :users="user"
+        @refresh="this.$emit('refresh')"
+      />
     </div>
     <div v-else class="data-container wrap">
       <p>No Data Available</p>
@@ -53,14 +72,12 @@ export default {
     return {
       search: null,
       selectedCourse: null,
-      selectedSort: null,
-      selectedDate: null,
-      courses: [
-        "Computer Science",
-        "Information Technology",
-        "Information System",
-      ],
+      selectedRole: null,
+      courses: ["IT", "CS", "IS"],
+
       isUploading: false,
+      roles: null,
+      role: null,
     };
   },
 
@@ -68,6 +85,16 @@ export default {
     handleSearch() {
       const query = this.$route.query;
       this.$router.push({ query: { ...query, search: this.search } });
+    },
+
+    handleCourseChange() {
+      const query = this.$route.query;
+      this.$router.push({ query: { ...query, course: this.selectedCourse } });
+    },
+
+    handleRoleChange() {
+      const query = this.$route.query;
+      this.$router.push({ query: { ...query, role: this.selectedRole } });
     },
 
     async onUpload(event) {
@@ -78,7 +105,7 @@ export default {
         this.$toast.add({
           severity: "success",
           summary: "Success",
-          detail: "CSV File Uploaded",
+          detail: "Upload process started in background",
           life: 3000,
         });
       } catch (error) {
@@ -97,6 +124,22 @@ export default {
     },
   },
 
+  mounted() {
+    this.role = localStorage.getItem("role");
+    console.log(this.role);
+
+    if (this.role === "capstone coordinator") {
+      this.roles = ["student", "faculty"];
+    } else if (this.role === "administrator") {
+      this.roles = [
+        "student",
+        "faculty",
+        "capstone coordinator",
+        "administrator",
+      ];
+    }
+  },
+
   watch: {
     "$route.query.search": {
       handler(newSearch) {
@@ -104,6 +147,26 @@ export default {
           this.search = null;
         } else {
           this.search = newSearch;
+        }
+      },
+      immediate: true,
+    },
+    "$route.query.course": {
+      handler(newCourse) {
+        if (newCourse === null || newCourse === undefined) {
+          this.selectedCourse = null;
+        } else {
+          this.selectedCourse = newCourse;
+        }
+      },
+      immediate: true,
+    },
+    "$route.query.role": {
+      handler(newRole) {
+        if (newRole === null || newRole === undefined) {
+          this.selectedRole = null;
+        } else {
+          this.selectedRole = newRole;
         }
       },
       immediate: true,

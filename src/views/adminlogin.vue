@@ -102,7 +102,6 @@ export default {
           const response = await auth.login(this.loginForm);
           if (response) {
             localStorage.setItem("token", response.access_token);
-            console.log("pasok");
 
             const me = await auth.me();
             if (me) {

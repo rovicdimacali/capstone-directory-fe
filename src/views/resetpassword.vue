@@ -11,14 +11,16 @@
         <p>UST-CICS</p>
         <small>Reset Password</small>
       </div>
-      <form class="col-10">
+      <form class="col-10" @submit.prevent="resetPassword">
         <Password
+          v-model="resetForm.new_password"
           class="input-user-auth"
-          :feedback="false"
+          :feedback="true"
           toggleMask
           placeholder="Password"
         />
         <Password
+          v-model="resetForm.confirm_password"
           class="input-user-auth"
           :feedback="false"
           toggleMask
@@ -31,7 +33,85 @@
 </template>
 
 <script>
-export default {};
+import { auth } from "@/api/auth";
+
+export default {
+  data() {
+    return {
+      resetForm: {
+        token: null,
+        new_password: null,
+        confirm_password: null,
+      },
+    };
+  },
+
+  validations: {
+    resetForm: {
+      new_password: { required: true, maxLength: 255 },
+      confirm_password: { required: false, maxLength: 255 },
+    },
+  },
+
+  methods: {
+    async validateForm() {
+      try {
+        await Yup.object()
+          .shape({
+            new_password: Yup.string()
+              .required("Password is required")
+              .min(8, "Password must be at least 8 characters long"), // Example for additional validation
+            confirm_password: Yup.string()
+              .required("Confirm Password is required")
+              .oneOf([Yup.ref("new_password"), null], "Passwords must match"),
+          })
+          .validate(this.resetForm, { abortEarly: false });
+
+        this.validationErrors = {}; // Clear previous errors
+        return true; // Form is valid
+      } catch (error) {
+        this.validationErrors = {};
+        error.inner.forEach((err) => {
+          this.validationErrors[err.path] = err.message;
+        });
+        console.log(this.validationErrors);
+
+        return false; // Form is invalid
+      }
+    },
+
+    async resetPassword() {
+      await this.validateForm();
+      if (!Object.keys(this.validationErrors).length) {
+        this.isLoading = true;
+        try {
+          await auth.resetPassword(this.resetForm);
+          this.$toast.add({
+            severity: "success",
+            summary: "Success",
+            detail: "Password reset successfully!",
+            life: 3000,
+          });
+          this.$router.push("/login");
+        } catch (error) {
+          console.error(error);
+          this.$toast.add({
+            severity: "error",
+            summary: "Uh-oh!",
+            detail: "Something went wrong.",
+            life: 3000,
+          });
+        } finally {
+          this.isLoading = false;
+        }
+      }
+    },
+  },
+
+  mounted() {
+    this.resetForm.token = this.$route.query.token;
+  },
+};
 </script>
 
 <style></style>
