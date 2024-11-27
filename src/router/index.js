@@ -66,8 +66,6 @@ router.beforeEach((to, from, next) => {
   const token = localStorage.getItem("token"); // Auth token
   const role = localStorage.getItem("role"); // User role
 
-  console.log(token);
-
   if (requiresAuth && !token) {
     // Redirect unauthenticated users to the login page
     return next({ name: "login" });

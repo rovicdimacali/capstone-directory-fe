@@ -126,7 +126,6 @@ export default {
 
   mounted() {
     this.role = localStorage.getItem("role");
-    console.log(this.role);
 
     if (this.role === "capstone coordinator") {
       this.roles = ["student", "faculty"];

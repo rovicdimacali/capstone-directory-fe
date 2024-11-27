@@ -74,7 +74,6 @@ export default {
         error.inner.forEach((err) => {
           this.validationErrors[err.path] = err.message;
         });
-        console.log(this.validationErrors);
 
         return false; // Form is invalid
       }

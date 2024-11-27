@@ -20,4 +20,9 @@ export const auth = {
     const response = await axios.post("/users/reset-password/", obj);
     return response.data;
   },
+
+  changePassword: async (obj) => {
+    const response = await axios.post("/users/change-password/", obj);
+    return response.data;
+  },
 };

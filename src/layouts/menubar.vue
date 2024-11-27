@@ -1,5 +1,10 @@
 <template>
   <div class="menubar">
+    <changepassword
+      v-if="changeVisible"
+      :isVisible="changeVisible"
+      @close="changeVisible = false"
+    />
     <i class="pi pi-times close-icon" @click="this.$emit('close')"></i>
     <div class="menu-links col">
       <div class="main-links col">
@@ -14,17 +19,20 @@
       </div>
     </div>
     <div class="user-links col">
-      <p>Profile</p>
+      <p @click="changeVisible = true">Profile</p>
       <p @click="logout">Logout</p>
     </div>
   </div>
 </template>
 
 <script>
+import changepassword from "@/components/menubar/dialogs/changepassword.vue";
 export default {
+  components: { changepassword },
   data() {
     return {
       role: null,
+      changeVisible: false,
     };
   },
   methods: {

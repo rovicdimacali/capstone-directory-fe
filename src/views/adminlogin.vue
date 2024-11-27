@@ -80,12 +80,9 @@ export default {
         this.errors = {}; // Clear previous errors
         return true; // Form is valid
       } catch (error) {
-        console.log(error.inner);
-
         if (error.inner) {
           // Only attempt to process error.inner if it exists
           this.error = error.inner.map((err) => err.errors).flat();
-          console.log(this.error);
         } else {
           // Handle unexpected validation errors
           console.error("Validation error:", error);
