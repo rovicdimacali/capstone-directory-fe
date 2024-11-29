@@ -1,5 +1,4 @@
 <template>
-  <Toast />
   <div class="dataview">
     <creategroup
       v-if="createVisible"

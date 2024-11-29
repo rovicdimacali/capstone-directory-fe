@@ -12,6 +12,12 @@
         }
       "
     />
+    <members
+      v-if="membverVisible"
+      :isVisible="membverVisible"
+      :group="group"
+      @close="membverVisible = false"
+    />
     <div class="header col">
       <h3>{{ group?.name }}</h3>
       <p>
@@ -21,7 +27,12 @@
     </div>
 
     <div class="actions-container row">
-      <Button text label="Members" class="action-btn" />
+      <Button
+        text
+        label="Members"
+        class="action-btn"
+        @click="membverVisible = true"
+      />
       <Button
         text
         label="Update"
@@ -41,15 +52,17 @@
 <script>
 import { groups } from "@/api/groups";
 import updategroup from "../dialogs/updategroup.vue";
+import members from "../dialogs/members.vue";
 
 export default {
   props: ["group"],
 
-  components: { updategroup },
+  components: { updategroup, members },
 
   data() {
     return {
       updateVisible: false,
+      membverVisible: false,
     };
   },
 

@@ -1,5 +1,4 @@
 <template>
-  <Toast />
   <Dialog
     v-model:visible="localVisible"
     modal
@@ -70,9 +69,9 @@
     <template #footer>
       <Button label="Cancel" text severity="secondary" @click="closeDialog" />
       <Button
-        label="Create"
+        label="Update"
         severity="contrast"
-        @click="createGroup"
+        @click="updateGroup"
         :loading="isLoading"
       />
     </template>
@@ -136,6 +135,7 @@ export default {
       await this.validateForm();
       if (!Object.keys(this.validationErrors).length) {
         this.isLoading = true;
+        this.groupForm.name = `${this.groupForm.name} (${this.groupForm.academic_year})`;
         try {
           await groups.updateGroup(this.group?.id, this.groupForm);
           this.$toast.add({
@@ -166,6 +166,7 @@ export default {
 
   mounted() {
     this.groupForm = this.group;
+    this.groupForm.name = this.groupForm.name.replace(/\s\(\d{4}-\d{4}\)/, "");
   },
 
   watch: {

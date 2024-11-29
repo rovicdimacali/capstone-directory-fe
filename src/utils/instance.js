@@ -37,7 +37,7 @@ instance.interceptors.response.use(
   async (error) => {
     if (error.response && error.response.status === 401) {
       localStorage.removeItem("token");
-      router.push("/");
+      router.push("/capstone-directory");
     }
     return Promise.reject(error);
   }
@@ -63,7 +63,7 @@ uploadInstance.interceptors.response.use(
   async (error) => {
     if (error.response && error.response.status === 401) {
       localStorage.removeItem("token");
-      router.push("/");
+      router.push("/capstone-directory");
     }
     return Promise.reject(error);
   }

@@ -1,5 +1,4 @@
 <template>
-  <Toast />
   <Dialog
     v-model:visible="localVisible"
     modal
@@ -142,6 +141,7 @@ export default {
       await this.validateForm();
       if (!Object.keys(this.validationErrors).length) {
         this.isLoading = true;
+        this.groupForm.name = `${this.groupForm.name} (${this.groupForm.academic_year})`;
         try {
           await groups.createGroup(this.groupForm);
           this.$toast.add({

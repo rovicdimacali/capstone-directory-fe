@@ -14,6 +14,10 @@ const router = createRouter({
   routes: [
     {
       path: "/",
+      redirect: "/capstone-directory", // Redirect `/` to `/capstone-directory`
+    },
+    {
+      path: "/capstone-directory",
       name: "applayout",
       component: applayout,
       children: [

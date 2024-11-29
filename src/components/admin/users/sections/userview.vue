@@ -1,5 +1,4 @@
 <template>
-  <Toast />
   <div class="dataview">
     <div class="search-filter-container wrap">
       <div class="search-input col-5">

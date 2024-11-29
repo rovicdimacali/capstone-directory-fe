@@ -1,5 +1,4 @@
 <template>
-  <Toast />
   <Dialog
     v-model:visible="localVisible"
     modal
@@ -20,6 +19,8 @@
         <label for="role">Group</label>
         <Select
           v-model="userForm.group"
+          optionLabel="name"
+          optionValue="id"
           :options="groups"
           placeholder="Select a Group"
         >
