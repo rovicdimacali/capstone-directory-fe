@@ -162,6 +162,8 @@ export default {
         } finally {
           this.isLoading = false;
         }
+      } else {
+        this.isLoading = false;
       }
     },
 

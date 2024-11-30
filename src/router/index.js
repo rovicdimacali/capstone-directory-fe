@@ -4,6 +4,7 @@ import forgotpassword from "@/views/forgotpassword.vue";
 import resetpassword from "@/views/resetpassword.vue";
 import home from "@/views/applayouts/home.vue";
 import applayout from "@/views/applayout.vue";
+import upload from "@/views/applayouts/upload.vue";
 
 import adminlogin from "@/views/adminlogin.vue";
 
@@ -25,6 +26,14 @@ const router = createRouter({
           path: "/capstone-directory",
           name: "home",
           component: home,
+          meta: {
+            requiresAuth: true,
+          },
+        },
+        {
+          path: "/upload",
+          name: "upload",
+          component: upload,
           meta: {
             requiresAuth: true,
           },

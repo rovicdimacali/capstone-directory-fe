@@ -23,6 +23,7 @@
           optionValue="id"
           :options="groups"
           placeholder="Select a Group"
+          filter
         >
           <template #option="slotProps">
             <div class="flex items-center">
