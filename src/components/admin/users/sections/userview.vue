@@ -1,5 +1,17 @@
 <template>
   <div class="dataview">
+    <createuser
+      v-if="createVisible"
+      :isVisible="createVisible"
+      :user="users"
+      @close="createVisible = false"
+      @submit="
+        () => {
+          createVisible = false;
+          this.$emit('refresh');
+        }
+      "
+    />
     <div class="search-filter-container wrap">
       <div class="search-input col-5">
         <InputText
@@ -27,6 +39,7 @@
         @change="handleRoleChange"
         showClear
       />
+      <Button label="Create User" @click="createVisible = true" />
       <FileUpload
         mode="basic"
         name="demo[]"
@@ -63,17 +76,18 @@
 <script>
 import usercard from "../card/usercard.vue";
 import { users } from "@/api/users";
+import createuser from "../dialogs/createuser.vue";
 
 export default {
   props: ["users"],
-  components: { usercard },
+  components: { usercard, createuser },
   data() {
     return {
       search: null,
       selectedCourse: null,
       selectedRole: null,
       courses: ["IT", "CS", "IS"],
-
+      createVisible: false,
       isUploading: false,
       roles: null,
       role: null,

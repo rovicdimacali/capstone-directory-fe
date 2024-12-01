@@ -32,6 +32,11 @@ export const users = {
     return response.data;
   },
 
+  createUser: async (obj) => {
+    const response = await axios.post(`/users/user-view/`, obj);
+    return response.data;
+  },
+
   updateUser: async (id, obj) => {
     const response = await axios.patch(`/users/user-view/${id}/`, obj);
     return response.data;
