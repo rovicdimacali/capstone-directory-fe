@@ -1,6 +1,6 @@
 <template>
   <banner :title="'Capstone Directory'" />
-  <dashboard />
+  <dashboard :all="totalCount" :best="bestCount" />
   <dataview
     :projects="projects"
     @refresh="
@@ -38,6 +38,7 @@ export default {
     return {
       projects: null,
       totalCount: null,
+      bestCount: null,
       currentPage: 0,
     };
   },
@@ -63,6 +64,17 @@ export default {
         );
         this.totalCount = response.count;
         this.projects = response.results;
+
+        const bestResponse = await capstone.get(
+          page,
+          search,
+          true,
+          is_approved,
+          is_ip_registered,
+          course,
+          sort_by
+        );
+        this.bestCount = bestResponse.count;
       } catch (error) {
         console.error(error);
       }
