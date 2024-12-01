@@ -5,7 +5,7 @@
       style="gap: 20px"
       @submit.prevent="uploadCapstone"
     >
-      <div class="input-container col-5">
+      <div v-if="role !== 'student'" class="input-container col-5">
         <label for="group"
           >Group
           <span
@@ -260,6 +260,7 @@ export default {
       selectedGroup: null,
       isLoading: false,
       validationErrors: null,
+      role: null,
     };
   },
 
@@ -285,7 +286,9 @@ export default {
         const response = await capstone.getByID(id);
 
         // Extract capstone_group_id from the response
-        let groupID = response.capstone_group ? response.capstone_group : null;
+        let groupID = response.capstone_group.id
+          ? response.capstone_group.id
+          : null;
 
         // Create a copy of the response without the keyword field
         const filteredResponse = { ...response };
@@ -433,25 +436,39 @@ export default {
 
     async uploadCapstone() {
       this.isLoading = true;
-      this.uploadForm.capstone_group_id = this.selectedGroup
-        ? this.selectedGroup.id
-        : null;
       this.uploadForm.members = this.uploadForm.members.filter(
         (name) => name !== ""
       );
-      this.uploadForm.date_published = this.uploadForm?.date_published
-        ?.toISOString()
-        ?.split("T")[0];
       await this.validateForm();
       if (!Object.keys(this.validationErrors).length) {
+        this.uploadForm.capstone_group_id = this.selectedGroup
+          ? this.selectedGroup.id
+          : null;
+
+        this.uploadForm.date_published = this.uploadForm?.date_published
+          ?.toISOString()
+          ?.split("T")[0];
         try {
           if (this.$route.query.is_edit === "true") {
             await capstone.update(
               this.$route.query.project_id,
               this.uploadForm
             );
+            this.$router.push("/upload");
           } else {
             await capstone.create(this.uploadForm);
+            this.uploadForm = {
+              capstone_group_id: null,
+              title: null,
+              ip_regristration: null,
+              acm_paper: null,
+              full_document: null,
+              pubmat: null,
+              approval_form: null,
+              source_code: null,
+              members: [],
+              date_published: null,
+            };
           }
           this.$toast.add({
             severity: "success",
@@ -482,6 +499,7 @@ export default {
     if (this.$route.query.is_edit === "true") {
       await this.fetchProject(this.$route.query.project_id);
     }
+    this.role = localStorage.getItem("role");
   },
   watch: {
     selectedGroup: {

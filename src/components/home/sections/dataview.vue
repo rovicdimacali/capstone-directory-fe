@@ -31,6 +31,7 @@
         v-for="project in projects"
         :key="project.id"
         :project="project"
+        @refresh="this.$emit('refresh')"
       />
     </div>
     <p v-else>No Capstone Projects Fetched.</p>

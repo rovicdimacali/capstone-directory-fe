@@ -1,5 +1,6 @@
 <template>
   <div class="user-auth">
+    <Toast />
     <div class="user-auth-box col">
       <div class="header">
         <div class="logo">
@@ -17,7 +18,7 @@
           class="input-user-auth"
           placeholder="Email"
         />
-        <Button label="SUBMIT" type="submit" />
+        <Button label="SUBMIT" type="submit" :loading="isLoading" />
       </form>
     </div>
   </div>

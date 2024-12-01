@@ -1,5 +1,6 @@
 <template>
   <div class="user-auth">
+    <Toast />
     <div class="user-auth-box col">
       <div class="header">
         <div class="logo">
@@ -26,7 +27,7 @@
           toggleMask
           placeholder="Confirm Password"
         />
-        <Button label="RESET" />
+        <Button label="RESET" type="submit" :loading="isLoading" />
       </form>
     </div>
   </div>
@@ -34,6 +35,7 @@
 
 <script>
 import { auth } from "@/api/auth";
+import { Toast } from "primevue";
 
 export default {
   data() {
@@ -43,6 +45,7 @@ export default {
         new_password: null,
         confirm_password: null,
       },
+      isLoading: false,
     };
   },
 
@@ -71,7 +74,7 @@ export default {
         return true; // Form is valid
       } catch (error) {
         this.validationErrors = {};
-        error.inner.forEach((err) => {
+        error?.inner?.forEach((err) => {
           this.validationErrors[err.path] = err.message;
         });
 

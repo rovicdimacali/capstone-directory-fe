@@ -1,7 +1,24 @@
 <template>
   <banner :title="'Capstone Directory'" />
   <dashboard />
-  <dataview :projects="projects" />
+  <dataview
+    :projects="projects"
+    @refresh="
+      fetchProjects(
+        this.$route.query.page ? parseInt(this.$route.query.page) : 0,
+        this.$route.query.search ? this.$route.query.search : null,
+        this.$route.query.is_best_capstone
+          ? this.$route.query.is_best_capstone
+          : null,
+        this.$route.query.is_approved ? this.$route.query.is_approved : null,
+        this.$route.query.is_ip_registered
+          ? this.$route.query.is_ip_registered
+          : null,
+        this.$route.query.course ? this.$route.query.course : null,
+        this.$route.query.sort_by ? this.$route.query.sort_by : null
+      )
+    "
+  />
   <Paginator
     :rows="10"
     :totalRecords="totalCount"
@@ -141,7 +158,11 @@ export default {
 
     "$route.query.is_approved": {
       handler(newValue) {
-        if (newValue) {
+        if (newValue === null || newValue === undefined) {
+          const { query, ...route } = this.$route;
+          this.$router.push({ ...route, query: {} }); // Set query to an empty object
+          this.fetchProjects(0, null, null, null, null, null, null);
+        } else {
           this.fetchProjects(
             0,
             null,
@@ -157,7 +178,11 @@ export default {
 
     "$route.query.is_ip_registered": {
       handler(newValue) {
-        if (newValue) {
+        if (newValue === null || newValue === undefined) {
+          const { query, ...route } = this.$route;
+          this.$router.push({ ...route, query: {} }); // Set query to an empty object
+          this.fetchProjects(0, null, null, null, null, null, null);
+        } else {
           this.fetchProjects(
             0,
             null,

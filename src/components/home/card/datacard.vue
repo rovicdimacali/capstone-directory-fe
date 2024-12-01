@@ -5,13 +5,16 @@
       <p>{{ formatDate(project?.date_published) }}</p>
     </div>
 
-    <div v-if="this.role === 'Student'" class="actions-container row">
-      <Button text label="ACM Paper" class="action-btn" />
-      <Button text label="Full Paper" class="action-btn" />
+    <div v-if="this.role === 'student'" class="actions-container row">
+      <a :href="project?.acm_paper" target="_blank"
+        ><Button text label="ACM Paper" class="action-btn"
+      /></a>
       <Button text label="Details" class="action-btn" />
     </div>
     <div v-else class="actions-container row">
-      <Button text label="Full Paper" class="action-btn" />
+      <a :href="project?.full_document" target="_blank"
+        ><Button text label="Full Paper" class="action-btn"
+      /></a>
       <Button
         text
         label="Update"
@@ -87,6 +90,7 @@ export default {
 
   mounted() {
     this.role = localStorage.getItem("role");
+    console.log(this.role);
   },
 };
 </script>

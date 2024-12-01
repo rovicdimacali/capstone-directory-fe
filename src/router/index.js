@@ -57,11 +57,13 @@ const router = createRouter({
       component: forgotpassword,
     },
     {
-      path: "/reset-password/:code",
+      path: "/reset-password",
       name: "resetpassword",
       component: resetpassword,
       beforeEnter: (to, from, next) => {
         // Check if the query parameter 'token' exists
+        console.log(to);
+
         if (!to.query.token) {
           // Redirect to the login page if the token is missing
           next({ name: "login" }); // Adjust 'login' to the name of your login route
@@ -94,11 +96,10 @@ router.beforeEach((to, from, next) => {
       // Allow admins to access all routes
       return next();
     } else if (role === "student") {
-      // Restrict students to specific routes
       if (
-        to.path !== "/capstone-directory" ||
-        to.path !== "/upload" ||
-        to.path !== "/ip-registered" ||
+        to.path !== "/capstone-directory" &&
+        to.path !== "/upload" &&
+        to.path !== "/ip-registered" &&
         to.path !== "/approvals"
       ) {
         return next("/capstone-directory"); // Redirect students to their home
