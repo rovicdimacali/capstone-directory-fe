@@ -78,6 +78,7 @@
           v-model="uploadForm.date_published"
           style="max-width: 350px"
           placeholder="Select Date"
+          format="yy-mm-dd"
         />
         <small v-if="validationErrors?.date_published" style="color: red">{{
           validationErrors?.date_published
@@ -222,6 +223,7 @@
           label="Submit Capstone"
           style="margin-block: 20px; min-width: 310px; max-width: 400px"
           type="submit"
+          :loading="isLoading"
         />
       </div>
     </form>
@@ -276,6 +278,41 @@ export default {
   methods: {
     onFileSelect(event) {
       this.uploadForm.acm_paper = event.files[0];
+    },
+
+    async fetchProject(id) {
+      try {
+        const response = await capstone.getByID(id);
+
+        // Extract capstone_group_id from the response
+        let groupID = response.capstone_group ? response.capstone_group : null;
+
+        // Create a copy of the response without the keyword field
+        const filteredResponse = { ...response };
+        delete filteredResponse.keywords;
+
+        // Assign other properties to uploadForm
+        Object.assign(this.uploadForm, {
+          ...filteredResponse,
+          members: filteredResponse.members || [],
+          date_published: new Date(filteredResponse.date_published),
+        });
+
+        this.fetchGroup(groupID);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    async fetchGroup(groupID) {
+      try {
+        const response = await groups.getGroup(groupID);
+
+        const { id, name, group_members } = response;
+        this.selectedGroup = { id, name, group_members };
+      } catch (error) {
+        console.error(error);
+      }
     },
 
     async fetchGroups() {
@@ -396,6 +433,9 @@ export default {
 
     async uploadCapstone() {
       this.isLoading = true;
+      this.uploadForm.capstone_group_id = this.selectedGroup
+        ? this.selectedGroup.id
+        : null;
       this.uploadForm.members = this.uploadForm.members.filter(
         (name) => name !== ""
       );
@@ -405,24 +445,47 @@ export default {
       await this.validateForm();
       if (!Object.keys(this.validationErrors).length) {
         try {
-          await capstone.create(this.uploadForm);
+          if (this.$route.query.is_edit === "true") {
+            await capstone.update(
+              this.$route.query.project_id,
+              this.uploadForm
+            );
+          } else {
+            await capstone.create(this.uploadForm);
+          }
+          this.$toast.add({
+            severity: "success",
+            summary:
+              this.$route.query.is_edit === "true"
+                ? "Capstone Updated Successfully."
+                : "Capstone Uploaded Successfully.",
+            life: 3000,
+          });
         } catch (error) {
           console.error(error);
+          this.$toast.add({
+            severity: "error",
+            summary: "Error",
+            detail: "User was not deleted successfully.",
+            life: 3000,
+          });
         } finally {
-          this.isLoading = true;
+          this.isLoading = false;
         }
       } else {
-        this.isLoading = true;
+        this.isLoading = false;
       }
     },
   },
-  mounted() {
+  async mounted() {
     this.fetchGroups();
+    if (this.$route.query.is_edit === "true") {
+      await this.fetchProject(this.$route.query.project_id);
+    }
   },
   watch: {
     selectedGroup: {
       handler(newValue) {
-        console.log(newValue.group_members);
         this.uploadForm.members[0] = newValue.group_members[0]
           ? `${newValue.group_members[0].first_name} ${newValue.group_members[0].last_name}`
           : "";
@@ -436,10 +499,23 @@ export default {
           ? `${newValue.group_members[3].first_name} ${newValue.group_members[3].last_name}`
           : "";
       },
-      "this.uploadForm.members": {
-        handler(newValue) {
-          console.log(newValue);
-        },
+    },
+    "$route.query.is_edit": {
+      handler(newValue) {
+        if (newValue === null || newValue === undefined) {
+          this.uploadForm = {
+            capstone_group_id: null,
+            title: null,
+            ip_regristration: null,
+            acm_paper: null,
+            full_document: null,
+            pubmat: null,
+            approval_form: null,
+            source_code: null,
+            members: [],
+            date_published: null,
+          };
+        }
       },
     },
   },

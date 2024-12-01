@@ -6,6 +6,11 @@ export const groups = {
     return response.data;
   },
 
+  getGroup: async (id) => {
+    const response = await axios.get(`users/groups/${id}/`);
+    return response.data;
+  },
+
   createGroup: async (obj) => {
     const response = await axios.post(`/users/groups/`, obj);
     return response.data;

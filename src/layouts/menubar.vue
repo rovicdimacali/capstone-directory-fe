@@ -9,9 +9,13 @@
     <div class="menu-links col">
       <div class="main-links col">
         <router-link to="/capstone-directory">Home</router-link>
-        <router-link to="/ip-registered">IP-Registered</router-link>
+        <router-link to="/capstone-directory?is_ip_registered=true"
+          >IP-Registered</router-link
+        >
         <router-link to="/upload">Upload</router-link>
-        <router-link to="/approvals">Approvals</router-link>
+        <router-link to="/capstone-directory?is_approved=false"
+          >Approvals</router-link
+        >
       </div>
       <div class="admin-links col">
         <router-link v-if="role !== 'student'" to="/users">Users</router-link>
@@ -68,6 +72,11 @@ export default {
 
   watch: {
     "$route.path": {
+      handler(newValue) {
+        this.$emit("close");
+      },
+    },
+    "$route.query": {
       handler(newValue) {
         this.$emit("close");
       },
