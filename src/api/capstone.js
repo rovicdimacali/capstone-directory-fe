@@ -62,12 +62,23 @@ export const capstone = {
     const formData = new FormData();
 
     // Append each key in the object to FormData
-    for (const key in obj) {
-      if (Array.isArray(obj[key])) {
-        // If the value is an array, stringify it
-        formData.append(key, JSON.stringify(obj[key]));
-      } else {
-        formData.append(key, obj[key]);
+    for (const key in uploadForm) {
+      if (uploadForm[key] !== null && uploadForm[key] !== undefined) {
+        if (Array.isArray(uploadForm[key])) {
+          // Special handling for arrays
+          if (key === "members") {
+            // For `members`, append as a single JSON string
+            formData.append(key, JSON.stringify(uploadForm[key]));
+          } else {
+            // For other arrays, append each value separately
+            uploadForm[key].forEach((item) =>
+              formData.append(`${key}[]`, item)
+            );
+          }
+        } else {
+          // Append other fields as single values
+          formData.append(key, uploadForm[key]);
+        }
       }
     }
 
@@ -78,13 +89,23 @@ export const capstone = {
   update: async (id, obj) => {
     const formData = new FormData();
 
-    // Append each key in the object to FormData
-    for (const key in obj) {
-      if (Array.isArray(obj[key])) {
-        // If the value is an array, stringify it
-        formData.append(key, JSON.stringify(obj[key]));
-      } else {
-        formData.append(key, obj[key]);
+    for (const key in uploadForm) {
+      if (uploadForm[key] !== null && uploadForm[key] !== undefined) {
+        if (Array.isArray(uploadForm[key])) {
+          // Special handling for arrays
+          if (key === "members") {
+            // For `members`, append as a single JSON string
+            formData.append(key, JSON.stringify(uploadForm[key]));
+          } else {
+            // For other arrays, append each value separately
+            uploadForm[key].forEach((item) =>
+              formData.append(`${key}[]`, item)
+            );
+          }
+        } else {
+          // Append other fields as single values
+          formData.append(key, uploadForm[key]);
+        }
       }
     }
 
