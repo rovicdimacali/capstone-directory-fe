@@ -4,7 +4,7 @@
       <div class="header">
         <div class="logo">
           <img
-            src="https://res.cloudinary.com/drayixmpk/image/upload/v1731331390/cics-logo_dmrh8v.png"
+            src="https://res.cloudinary.com/dpm5vdakr/image/upload/v1731330211/capstone_directory/cics-logo.png"
             alt="ust-cics-logo"
           />
         </div>
