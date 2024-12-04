@@ -59,14 +59,38 @@ export const capstone = {
   },
 
   create: async (obj) => {
-    const response = await axios.post("/capstone-projects/projects/", obj);
+    const formData = new FormData();
+
+    // Append each key in the object to FormData
+    for (const key in obj) {
+      if (Array.isArray(obj[key])) {
+        // If the value is an array, stringify it
+        formData.append(key, JSON.stringify(obj[key]));
+      } else {
+        formData.append(key, obj[key]);
+      }
+    }
+
+    const response = await axios.post("/capstone-projects/projects/", formData);
     return response.data;
   },
 
   update: async (id, obj) => {
+    const formData = new FormData();
+
+    // Append each key in the object to FormData
+    for (const key in obj) {
+      if (Array.isArray(obj[key])) {
+        // If the value is an array, stringify it
+        formData.append(key, JSON.stringify(obj[key]));
+      } else {
+        formData.append(key, obj[key]);
+      }
+    }
+
     const response = await axios.patch(
       `/capstone-projects/projects/${id}/`,
-      obj
+      formData
     );
     return response.data;
   },
