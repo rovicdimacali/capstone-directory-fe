@@ -70,6 +70,8 @@ export const capstone = {
       }
     }
 
+    console.log(formData);
+
     const response = await axios.post("/capstone-projects/projects/", formData);
     return response.data;
   },
