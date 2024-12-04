@@ -75,4 +75,31 @@ export const capstone = {
     const response = await axios.delete(`/capstone-projects/projects/${id}/`);
     return response.data;
   },
+
+  approve: async (id) => {
+    const response = await axios.post(`/capstone-projects/projects/approve/`, {
+      project_id: id,
+      is_approved: true,
+    });
+    return response.data;
+  },
+
+  reject: async (id) => {
+    const response = await axios.post(`/capstone-projects/projects/approve/`, {
+      project_id: id,
+      is_approved: false,
+    });
+    return response.data;
+  },
+
+  best_project: async (id) => {
+    const response = await axios.post(
+      `/capstone-projects/projects/best-project/`,
+      {
+        project_id: id,
+        is_best_project: true,
+      }
+    );
+    return response.data;
+  },
 };

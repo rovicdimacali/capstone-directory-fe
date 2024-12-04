@@ -8,7 +8,7 @@
     <i class="pi pi-times close-icon" @click="this.$emit('close')"></i>
     <div class="menu-links col">
       <div class="main-links col">
-        <router-link to="/capstone-directory">Home</router-link>
+        <router-link to="/capstone-directory?page=0">Home</router-link>
         <router-link to="/capstone-directory?is_ip_registered=true"
           >IP-Registered</router-link
         >

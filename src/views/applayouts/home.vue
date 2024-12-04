@@ -1,6 +1,6 @@
 <template>
   <banner :title="'Capstone Directory'" />
-  <dashboard :all="totalCount" :best="bestCount" />
+  <dashboard v-if="shouldDisplayDashboard" :all="allCount" :best="bestCount" />
   <dataview
     :projects="projects"
     @refresh="
@@ -38,10 +38,23 @@ export default {
     return {
       projects: null,
       totalCount: null,
+      allCount: null,
       bestCount: null,
       currentPage: 0,
     };
   },
+
+  computed: {
+    shouldDisplayDashboard() {
+      const query = this.$route.query;
+      return (
+        !Object.keys(query).length ||
+        query.is_best_capstone === "true" ||
+        query.page !== null
+      );
+    },
+  },
+
   methods: {
     async fetchProjects(
       page,
@@ -64,6 +77,12 @@ export default {
         );
         this.totalCount = response.count;
         this.projects = response.results;
+
+        console.log(!is_best_capstone);
+
+        if (!is_best_capstone) {
+          this.allCount = response.count;
+        }
 
         const bestResponse = await capstone.get(
           page,
@@ -96,7 +115,7 @@ export default {
           this.$route.query.is_best_capstone
             ? this.$route.query.is_best_capstone
             : null,
-          this.$route.query.is_approved ? this.$route.query.is_approved : null,
+          this.$route.query.is_approved,
           this.$route.query.is_ip_registered
             ? this.$route.query.is_ip_registered
             : null,
@@ -104,7 +123,7 @@ export default {
           this.$route.query.sort_by ? this.$route.query.sort_by : null
         );
       },
-      immediate: true, // Call the handler immediately on component mount
+      immediate: true,
     },
 
     "$route.query.search": {
@@ -155,51 +174,28 @@ export default {
           this.$router.push({ ...route, query: {} }); // Set query to an empty object
           this.fetchProjects(0, null, null, null, null, null, null);
         } else {
-          this.fetchProjects(
-            0,
-            null,
-            newValue ? newValue : "",
-            null,
-            null,
-            null,
-            null
-          );
+          this.fetchProjects(0, null, newValue, null, null, null, null);
         }
       },
     },
 
     "$route.query.is_approved": {
       handler(newValue) {
-        if (newValue === null || newValue === undefined) {
-          const { query, ...route } = this.$route;
-          this.$router.push({ ...route, query: {} }); // Set query to an empty object
-          this.fetchProjects(0, null, null, null, null, null, null);
-        } else {
-          this.fetchProjects(
-            0,
-            null,
-            null,
-            newValue ? newValue : "",
-            null,
-            null,
-            null
-          );
+        if (newValue === "false") {
+          this.fetchProjects(0, null, false, false, null, null, null);
         }
       },
     },
 
     "$route.query.is_ip_registered": {
       handler(newValue) {
-        if (newValue === null || newValue === undefined) {
-          const { query, ...route } = this.$route;
-          this.$router.push({ ...route, query: {} }); // Set query to an empty object
-          this.fetchProjects(0, null, null, null, null, null, null);
-        } else {
+        if (newValue !== null || newValue !== undefined) {
+          this.$router.push("/?is_approved=true&is_ip_registere=true");
           this.fetchProjects(
             0,
             null,
-            null,
-            null,
+            false,
+            true,
             newValue ? newValue : "",
             null,
             null

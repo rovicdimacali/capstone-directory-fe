@@ -33,7 +33,7 @@
           </template></Select
         >
       </div>
-      <div class="input-container col-5">
+      <div v-if="role !== 'student'" class="input-container col-5">
         <label for="members">Members</label>
         <InputText
           id="members"
@@ -212,7 +212,7 @@
         <InputText
           id="source_code"
           v-model="uploadForm.source_code"
-          placeholder="e.g. git@github.com:user/sample-repo.git"
+          placeholder="GIT HTTPS Only"
         />
         <small v-if="validationErrors?.source_code" style="color: red">{{
           validationErrors?.source_code
@@ -413,9 +413,6 @@ export default {
             approval_form: Yup.string().nullable(), // optional
             source_code: Yup.string().required("Source code is required"),
             approval_form: Yup.string().required("Source code is required"),
-            members: Yup.array()
-              .of(Yup.string().required("Member name is required"))
-              .min(3, "At least 3 members are required"),
             date_published: Yup.date().required("Date published is required"),
           })
           .validate(this.uploadForm, { abortEarly: false });
@@ -446,8 +443,14 @@ export default {
           : null;
 
         this.uploadForm.date_published = this.uploadForm?.date_published
-          ?.toISOString()
-          ?.split("T")[0];
+          ? new Date(
+              new Date(this.uploadForm.date_published).setDate(
+                new Date(this.uploadForm.date_published).getDate() + 1
+              )
+            )
+              .toISOString()
+              .split("T")[0]
+          : null;
         try {
           if (this.$route.query.is_edit === "true") {
             await capstone.update(
@@ -482,8 +485,8 @@ export default {
           console.error(error);
           this.$toast.add({
             severity: "error",
-            summary: "Error",
-            detail: "User was not deleted successfully.",
+            summary: "Upload Error",
+            detail: error.response.data,
             life: 3000,
           });
         } finally {
