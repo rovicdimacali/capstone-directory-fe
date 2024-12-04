@@ -59,6 +59,8 @@ export const capstone = {
   },
 
   create: async (obj) => {
+    console.log("eto yun", obj);
+
     const response = await axios.post("/capstone-projects/projects/", obj);
     return response.data;
   },
