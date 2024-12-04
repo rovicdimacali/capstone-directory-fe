@@ -13,34 +13,113 @@
         <small>Capstone Directory</small>
       </div>
     </div>
-    <div
-      class="burger-icon"
-      @click="
-        () => {
-          menubarActive = true;
-        }
-      "
-    >
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M5 8H13.75M5 12H19M10.25 16L19 16"
-          stroke="#464455"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+    <div class="action-row row-10" style="align-items: center">
+      <div class="notification-icon">
+        <Button
+          icon="pi pi-bell"
+          text
+          rounded
+          raised
+          @click="toggle"
+          :badge="unreadCount"
+          badgeSeverity="primary"
         />
-      </svg>
+        <Popover ref="op" style="padding: 0">
+          <div
+            class="flex flex-col gap-4"
+            style="max-height: 500px; overflow-y: scroll"
+          >
+            <div>
+              <span class="font-medium block mb-2">Notifications</span>
+              <div
+                v-for="notif in notifications"
+                :key="notif.id"
+                class="notification-col col-5"
+                @click="markAsRead(notif.id)"
+              >
+                <p :class="notif.is_read ? '' : 'bold'">{{ notif.action }}</p>
+              </div>
+            </div>
+          </div>
+        </Popover>
+      </div>
+      <div
+        class="burger-icon"
+        @click="
+          () => {
+            menubarActive = true;
+          }
+        "
+      >
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M5 8H13.75M5 12H19M10.25 16L19 16"
+            stroke="#464455"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </div>
     </div>
   </nav>
 </template>
 
 <script>
 import menubar from "./menubar.vue";
+import { notification } from "@/api/notifications";
 export default {
   components: { menubar },
   data() {
     return {
       menubarActive: false,
+      notifications: null,
+      unreadCount: 0,
+      pollingInterval: null,
     };
+  },
+
+  methods: {
+    toggle(event) {
+      this.$refs.op.toggle(event);
+    },
+
+    async fetchNotifications() {
+      try {
+        const response = await notification.get();
+        this.notifications = response.results;
+        this.unreadCount = this.notifications.filter(
+          (notification) => notification.is_read === false
+        ).length;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    async markAsRead(id) {
+      try {
+        await notification.mark_read(id);
+        this.fetchNotifications();
+      } catch (error) {
+        console.error(error);
+      }
+    },
+  },
+
+  mounted() {
+    // Fetch notifications immediately when mounted
+    this.fetchNotifications();
+
+    // Start polling every 3 seconds (3000ms)
+    this.pollingInterval = setInterval(() => {
+      this.fetchNotifications();
+    }, 3000);
+  },
+
+  beforeDestroy() {
+    // Clear the interval when the component is destroyed to prevent memory leaks
+    if (this.pollingInterval) {
+      clearInterval(this.pollingInterval);
+    }
   },
 };
 </script>

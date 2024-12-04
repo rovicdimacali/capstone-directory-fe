@@ -1,0 +1,19 @@
+.notification-col {
+  padding: 10px;
+  max-width: 300px;
+  transition: 0.3s all;
+  cursor: pointer;
+
+  &:hover {
+    background: #e0e0e0;
+  }
+
+  p {
+    margin: 0;
+    font-size: 14px;
+
+    &.bold {
+      font-weight: 800;
+    }
+  }
+}

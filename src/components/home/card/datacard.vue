@@ -17,7 +17,12 @@
       style="gap: 5px"
     >
       <a :href="project?.acm_paper" target="_blank"
-        ><Button text label="ACM Paper" severity="contrast" class="action-btn"
+        ><Button
+          text
+          label="ACM Paper"
+          severity="contrast"
+          class="action-btn"
+          raised
       /></a>
       <Button
         v-if="this.$route.query.is_approved === 'false'"
@@ -28,6 +33,7 @@
         @click="
           this.$router.push(`/upload?is_edit=true&project_id=${project?.id}`)
         "
+        raised
       />
       <Button
         text
@@ -35,17 +41,25 @@
         class="action-btn"
         severity="success"
         @click="detailsVisible = true"
+        raised
       />
     </div>
     <div v-else class="actions-container wrap" style="gap: 5px">
       <a :href="project?.full_document" target="_blank"
-        ><Button label="Full Paper" severity="contrast" class="action-btn"
+        ><Button
+          label="Full Paper"
+          severity="contrast"
+          class="action-btn"
+          text
+          raised
       /></a>
       <Button
         label="Details"
         class="action-btn"
         severity="success"
         @click="detailsVisible = true"
+        text
+        raised
       />
       <Button
         label="Update"
@@ -54,12 +68,16 @@
         @click="
           this.$router.push(`/upload?is_edit=true&project_id=${project?.id}`)
         "
+        text
+        raised
       />
       <Button
         v-if="shouldDisplay"
         label="Delete"
         class="action-btn"
         @click="deleteProject(project?.id)"
+        text
+        raised
       />
       <Button
         v-if="shouldDisplay"
@@ -67,6 +85,8 @@
         class="action-btn"
         severity="help"
         @click="bestProject(project?.id)"
+        text
+        raised
       />
       <Button
         v-if="this.$route.query.is_approved === 'false'"
@@ -74,6 +94,8 @@
         class="action-btn"
         severity="warn"
         @click="approveProject(project?.id)"
+        text
+        raised
       />
       <Button
         v-if="this.$route.query.is_approved === 'false'"
@@ -81,6 +103,8 @@
         class="action-btn"
         severity="secondary"
         @click="rejectProject(project?.id)"
+        text
+        raised
       />
     </div>
   </div>
