@@ -62,6 +62,18 @@
         raised
       />
       <Button
+        v-if="role === 'administrator'"
+        label="Update"
+        class="action-btn"
+        severity="info"
+        @click="
+          this.$router.push(`/upload?is_edit=true&project_id=${project?.id}`)
+        "
+        text
+        raised
+      />
+      <Button
+        v-if="role === 'student' && project.is_approved === 'pending'"
         label="Update"
         class="action-btn"
         severity="info"
