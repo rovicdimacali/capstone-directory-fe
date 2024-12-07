@@ -25,7 +25,7 @@
           raised
       /></a>
       <Button
-        v-if="this.$route.query.is_approved === 'false'"
+        v-if="this.$route.query.is_approved === 'pending'"
         text
         label="Update"
         class="action-btn"
@@ -72,17 +72,7 @@
         text
         raised
       />
-      <Button
-        v-if="role === 'student' && project.is_approved === 'pending'"
-        label="Update"
-        class="action-btn"
-        severity="info"
-        @click="
-          this.$router.push(`/upload?is_edit=true&project_id=${project?.id}`)
-        "
-        text
-        raised
-      />
+
       <Button
         v-if="shouldDisplay"
         label="Delete"
