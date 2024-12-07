@@ -113,4 +113,14 @@ export const capstone = {
     );
     return response.data;
   },
+  unbest_project: async (id) => {
+    const response = await axios.post(
+      `/capstone-projects/projects/best-project/`,
+      {
+        project_id: id,
+        is_best_project: false,
+      }
+    );
+    return response.data;
+  },
 };

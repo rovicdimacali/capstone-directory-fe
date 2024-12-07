@@ -66,7 +66,7 @@
       />
 
       <Button
-        v-if="shouldDisplay"
+        v-if="role === 'administrator'"
         label="Delete"
         class="action-btn"
         @click="deleteProject(project?.id)"
@@ -74,7 +74,8 @@
         raised
       />
       <Button
-        v-if="shouldDisplay"
+        v-if="role === 'administrator' && project.is_best_capstone === false"
+        icon="pi pi-check"
         label="Best Project"
         class="action-btn"
         severity="help"
@@ -83,7 +84,20 @@
         raised
       />
       <Button
-        v-if="this.$route.query.is_approved === 'pending'"
+        v-if="role === 'administrator' && project.is_best_capstone === true"
+        icon="pi pi-times"
+        label="Best Project"
+        class="action-btn"
+        severity="help"
+        @click="unbestProject(project?.id)"
+        text
+        raised
+      />
+      <Button
+        v-if="
+          role === 'administrator' &&
+          this.$route.query.is_approved === 'pending'
+        "
         label="Approve"
         class="action-btn"
         severity="warn"
@@ -92,7 +106,10 @@
         raised
       />
       <Button
-        v-if="this.$route.query.is_approved === 'pending'"
+        v-if="
+          role === 'administrator' &&
+          this.$route.query.is_approved === 'pending'
+        "
         label="Reject"
         class="action-btn"
         severity="secondary"
@@ -277,6 +294,43 @@ export default {
               severity: "error",
               summary: "Error",
               detail: "Project was not promoted successfully.",
+              life: 3000,
+            });
+          }
+        },
+        reject: () => {},
+      });
+    },
+
+    unbestProject(id) {
+      this.$confirm.require({
+        message: "Are you sure you want to demote this project?",
+        header: "Confirmation",
+        icon: "pi pi-exclamation-triangle",
+        rejectProps: {
+          label: "No",
+          severity: "secondary",
+          outlined: true,
+        },
+        acceptProps: {
+          label: "Yes",
+        },
+        accept: async () => {
+          try {
+            await capstone.unbest_project(id);
+            this.$toast.add({
+              severity: "success",
+              summary: "Success",
+              detail: "Project Demoted Successfully.",
+              life: 3000,
+            });
+            this.$emit("refresh");
+          } catch (error) {
+            console.error(error);
+            this.$toast.add({
+              severity: "error",
+              summary: "Error",
+              detail: "Project was not demoted successfully.",
               life: 3000,
             });
           }
