@@ -89,7 +89,7 @@
         raised
       />
       <Button
-        v-if="this.$route.query.is_approved === 'false'"
+        v-if="this.$route.query.is_approved === 'pending'"
         label="Approve"
         class="action-btn"
         severity="warn"
@@ -98,7 +98,7 @@
         raised
       />
       <Button
-        v-if="this.$route.query.is_approved === 'false'"
+        v-if="this.$route.query.is_approved === 'pending'"
         label="Reject"
         class="action-btn"
         severity="secondary"
@@ -294,7 +294,6 @@ export default {
 
   mounted() {
     this.role = localStorage.getItem("role");
-    console.log(this.role);
   },
 };
 </script>

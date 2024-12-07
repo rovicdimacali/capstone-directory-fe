@@ -24,7 +24,7 @@
       <Select
         v-model="selectedCourse"
         :options="courses"
-        placeholder="Select Course"
+        placeholder="Select Program"
         class="dropdown"
         @change="handleCourseChange"
         showClear

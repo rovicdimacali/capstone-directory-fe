@@ -60,7 +60,7 @@
         }}</small>
       </div>
       <div class="input-container col-5">
-        <label for="title">Title</label>
+        <label for="title">Title <span style="color: red">*</span></label>
         <InputText
           id="title"
           v-model="uploadForm.title"
@@ -71,7 +71,9 @@
         }}</small>
       </div>
       <div class="input-container col-5">
-        <label for="date_published">Date Published</label>
+        <label for="date_published"
+          >Date Published <span style="color: red">*</span></label
+        >
         <DatePicker
           id="date_published"
           :maxDate="new Date()"
@@ -86,7 +88,7 @@
       </div>
 
       <div class="input-container col-5">
-        <label for="city">ACM Paper</label>
+        <label for="city">ACM Paper <span style="color: red">*</span></label>
         <div class="upload-row row" style="gap: 10px; align-items: center">
           <div class="col">
             <FileUpload
@@ -105,7 +107,9 @@
         }}</small>
       </div>
       <div class="input-container col-5">
-        <label for="city">Full Document</label>
+        <label for="city"
+          >Full Document <span style="color: red">*</span></label
+        >
         <InputText
           id="members"
           v-model="uploadForm.full_document"
@@ -116,7 +120,7 @@
         }}</small>
       </div>
       <div class="input-container col-5">
-        <label for="city">Pubmat</label>
+        <label for="city">Pubmat <span style="color: red">*</span></label>
         <div class="upload-row row" style="gap: 10px; align-items: center">
           <div class="col">
             <FileUpload
@@ -147,7 +151,9 @@
         }}</small>
       </div>
       <div class="input-container col-5">
-        <label for="city">Approval Form</label>
+        <label for="city"
+          >Approval Form <span style="color: red">*</span></label
+        >
         <div class="upload-row row" style="gap: 10px; align-items: center">
           <div class="col">
             <FileUpload
@@ -178,7 +184,9 @@
         }}</small>
       </div>
       <div class="input-container col-5">
-        <label for="city">IP Registration</label>
+        <label for="city"
+          >IP Registration <span style="color: red">*</span></label
+        >
         <div class="upload-row row" style="gap: 10px; align-items: center">
           <div class="col">
             <FileUpload
@@ -207,7 +215,8 @@
       </div>
       <div class="input-container col-5">
         <label for="source_code"
-          >Source Code <span><small>(Git Link)</small></span></label
+          >Source Code <span><small>(Git Link)</small></span
+          ><span style="color: red">*</span></label
         >
         <InputText
           id="source_code"
@@ -216,6 +225,32 @@
         />
         <small v-if="validationErrors?.source_code" style="color: red">{{
           validationErrors?.source_code
+        }}</small>
+      </div>
+      <div class="input-container col-5">
+        <label for="course">Program <span style="color: red">*</span></label>
+        <Select
+          v-model="uploadForm.course"
+          :options="courses"
+          placeholder="Select a Program"
+          :disabled="role === 'student'"
+        />
+        <small v-if="validationErrors?.course" style="color: red">{{
+          validationErrors?.course
+        }}</small>
+      </div>
+      <div class="input-container col-5">
+        <label for="specialization"
+          >Specialization <span style="color: red">*</span></label
+        >
+        <Select
+          v-model="uploadForm.specialization"
+          :options="specializations[uploadForm.course]"
+          placeholder="Select a Specialization"
+          :disabled="role === 'student'"
+        />
+        <small v-if="validationErrors?.specialization" style="color: red">{{
+          validationErrors?.specialization
         }}</small>
       </div>
       <div class="row" style="justify-content: center">
@@ -249,6 +284,18 @@ export default {
         source_code: null,
         members: [],
         date_published: null,
+        course: null,
+        specialization: null,
+      },
+      courses: ["IT", "CS", "IS"],
+      specializations: {
+        IT: [
+          "Automation",
+          "Network and Security",
+          "Web and Mobile App Development",
+        ],
+        IS: ["Business Analytics", "Service Management"],
+        CS: ["Core Computer Science", "Game Development", "Data Science"],
       },
       groups: null,
       pubmatName: null,
@@ -273,6 +320,8 @@ export default {
       source_code: { required: true },
       approval_form: { required: true },
       date_published: { required: true },
+      course: { required: true },
+      specialization: { required: true },
     },
   },
 
@@ -286,9 +335,13 @@ export default {
         const response = await capstone.getByID(id);
 
         // Extract capstone_group_id from the response
-        let groupID = response.capstone_group.id
-          ? response.capstone_group.id
-          : null;
+        if (response.capstone_group) {
+          let groupID = response.capstone_group.id
+            ? response.capstone_group.id
+            : null;
+
+          this.fetchGroup(groupID);
+        }
 
         // Create a copy of the response without the keyword field
         const filteredResponse = { ...response };
@@ -300,8 +353,6 @@ export default {
           members: filteredResponse.members || [],
           date_published: new Date(filteredResponse.date_published),
         });
-
-        this.fetchGroup(groupID);
       } catch (error) {
         console.error(error);
       }
@@ -414,6 +465,8 @@ export default {
             source_code: Yup.string().required("Source code is required"),
             approval_form: Yup.string().required("Source code is required"),
             date_published: Yup.date().required("Date published is required"),
+            course: Yup.string().required("Course is required"),
+            specialization: Yup.string().required("Specialization is required"),
           })
           .validate(this.uploadForm, { abortEarly: false });
 
@@ -503,6 +556,9 @@ export default {
       await this.fetchProject(this.$route.query.project_id);
     }
     this.role = localStorage.getItem("role");
+    this.uploadForm.course = localStorage.getItem("course");
+    this.uploadForm.specialization = localStorage.getItem("specialization");
+    console.log(this.uploadForm.course);
   },
   watch: {
     selectedGroup: {

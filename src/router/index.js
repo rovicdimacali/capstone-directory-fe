@@ -6,8 +6,6 @@ import home from "@/views/applayouts/home.vue";
 import applayout from "@/views/applayout.vue";
 import upload from "@/views/applayouts/upload.vue";
 
-import adminlogin from "@/views/adminlogin.vue";
-
 import { adminroutes } from "./adminroutes";
 
 const router = createRouter({
@@ -15,7 +13,7 @@ const router = createRouter({
   routes: [
     {
       path: "/",
-      redirect: "/capstone-directory", // Redirect `/` to `/capstone-directory`
+      redirect: "/capstone-directory",
     },
     {
       path: "/capstone-directory",
@@ -45,11 +43,6 @@ const router = createRouter({
       path: "/login",
       name: "login",
       component: login,
-    },
-    {
-      path: "/cics-admin",
-      name: "adminlogin",
-      component: adminlogin,
     },
     {
       path: "/forgot-password",
@@ -87,7 +80,7 @@ router.beforeEach((to, from, next) => {
   }
 
   if (!requiresAuth && token) {
-    return next("/capstone-directory");
+    return next("/capstone-directory?page=0");
   }
 
   // Handle role-based redirection for authenticated users
@@ -95,14 +88,24 @@ router.beforeEach((to, from, next) => {
     if (role === "administrator") {
       // Allow admins to access all routes
       return next();
-    } else if (role === "student") {
+    } else if (role === "student" || role === "faculty") {
       if (
         to.path !== "/capstone-directory" &&
         to.path !== "/upload" &&
         to.path !== "/ip-registered" &&
         to.path !== "/approvals"
       ) {
-        return next("/capstone-directory"); // Redirect students to their home
+        return next("/capstone-directory?page=0"); // Redirect students to their home
+      }
+    } else if (role === "capstone coordinator") {
+      if (
+        to.path !== "/capstone-directory" &&
+        to.path !== "/upload" &&
+        to.path !== "/ip-registered" &&
+        to.path !== "/groups" &&
+        to.path !== "/users"
+      ) {
+        return next("/capstone-directory?page=0"); // Redirect students to their home
       }
     } else {
       // If the role is unrecognized, clear storage and redirect to login

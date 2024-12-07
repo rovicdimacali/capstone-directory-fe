@@ -14,6 +14,12 @@
       </div>
     </div>
     <div class="action-row row-10" style="align-items: center">
+      <div class="user-info">
+        <p>
+          Hello, {{ first_name }}
+          <span style="text-transform: capitalize">({{ role }})</span>
+        </p>
+      </div>
       <div class="notification-icon">
         <Button
           icon="pi pi-bell"
@@ -75,6 +81,8 @@ export default {
       notifications: null,
       unreadCount: 0,
       pollingInterval: null,
+      first_name: null,
+      role: null,
     };
   },
 
@@ -113,6 +121,12 @@ export default {
     this.pollingInterval = setInterval(() => {
       this.fetchNotifications();
     }, 3000);
+
+    console.log(localStorage.getItem("first_name"));
+
+    this.first_name = localStorage.getItem("first_name");
+
+    this.role = localStorage.getItem("role");
   },
 
   beforeDestroy() {

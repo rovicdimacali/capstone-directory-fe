@@ -8,13 +8,19 @@
     <i class="pi pi-times close-icon" @click="this.$emit('close')"></i>
     <div class="menu-links col">
       <div class="main-links col">
-        <router-link to="/capstone-directory?page=0">Home</router-link>
-        <router-link to="/capstone-directory?is_ip_registered=true"
+        <router-link to="/capstone-directory?page=0&is_approved=true"
+          >Home</router-link
+        >
+        <router-link
+          to="/capstone-directory?page=0&is_approved=true&is_ip_registered=true"
           >IP-Registered</router-link
         >
         <router-link to="/upload">Upload</router-link>
-        <router-link to="/capstone-directory?is_approved=false"
+        <router-link to="/capstone-directory?page=0&is_approved=pending"
           >Approvals</router-link
+        >
+        <router-link to="/capstone-directory?page=0&is_approved=false"
+          >Rejects</router-link
         >
       </div>
       <div class="admin-links col">
@@ -23,7 +29,7 @@
       </div>
     </div>
     <div class="user-links col">
-      <p @click="changeVisible = true">Settings</p>
+      <p @click="changeVisible = true">Change Password</p>
       <p @click="logout">Logout</p>
     </div>
   </div>
@@ -54,11 +60,7 @@ export default {
           label: "Yes",
         },
         accept: () => {
-          if (localStorage.getItem("role") === "Student") {
-            this.$router.push("/login");
-          } else {
-            this.$router.push("/cics-admin");
-          }
+          this.$router.push("/login");
           localStorage.clear();
         },
         reject: () => {},

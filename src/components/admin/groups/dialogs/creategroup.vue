@@ -45,11 +45,11 @@
         class="input-container col-5"
         style="flex-grow: 1; flex-basis: 350px"
       >
-        <label for="course">Course</label>
+        <label for="course">Program</label>
         <Select
           v-model="groupForm.course"
           :options="courses"
-          placeholder="Select a Course"
+          placeholder="Select a Program"
         />
         <small v-if="validationErrors.course" style="color: red">{{
           validationErrors.course

@@ -1,18 +1,30 @@
 <template>
   <div class="dataview">
     <div class="search-filter-container wrap">
-      <InputText
-        v-model="search"
-        class="search-input"
-        placeholder="Search by title, keyword, academic year, or group"
-        @keypress.enter="handleSearch"
-      />
+      <div class="search-input col-5">
+        <InputText
+          v-model="search"
+          placeholder="Search"
+          @keyup.enter="handleSearch"
+        />
+        <small>Press Enter to Search</small>
+      </div>
       <Select
+        v-if="role === 'administrator'"
         v-model="selectedCourse"
         :options="courses"
-        placeholder="Select Course"
+        placeholder="Select Program"
         class="dropdown"
         @change="handleCourseChange"
+        showClear
+      />
+      <Select
+        v-if="role !== 'student'"
+        v-model="selectedSpec"
+        :options="specializations[selectedCourse]"
+        placeholder="Select Specialization"
+        class="dropdown"
+        @change="handleSpecializationChange"
         showClear
       />
       <Select
@@ -46,9 +58,19 @@ export default {
   components: { datacard },
   data() {
     return {
+      selectedSpec: null,
       selectedCourse: null,
       selectedSort: null,
-      courses: ["CS", "IT", "IS"],
+      courses: ["IT", "CS", "IS"],
+      specializations: {
+        IT: [
+          "Automation",
+          "Network and Security",
+          "Web and Mobile App Development",
+        ],
+        IS: ["Business Analytics", "Service Management"],
+        CS: ["Core Computer Science", "Game Development", "Data Science"],
+      },
       sorting: [
         {
           label: "Newest",
@@ -68,6 +90,7 @@ export default {
         },
       ],
       search: null,
+      role: null,
     };
   },
   methods: {
@@ -81,18 +104,27 @@ export default {
       this.$router.push({ query: { ...query, course: this.selectedCourse } });
     },
 
+    handleSpecializationChange() {
+      const query = this.$route.query;
+      this.$router.push({
+        query: { ...query, specialization: this.selectedSpec },
+      });
+    },
+
     handleSortChange() {
       const query = this.$route.query;
       this.$router.push({ query: { ...query, sort_by: this.selectedSort } });
     },
   },
 
+  mounted() {
+    this.role = localStorage.getItem("role");
+  },
+
   watch: {
     "$route.query.search": {
       handler(newSearch) {
-        if (newSearch === null || newSearch === undefined) {
-          this.search = null;
-        } else {
+        if (newSearch) {
           this.search = newSearch;
         }
       },
@@ -100,19 +132,24 @@ export default {
     },
     "$route.query.course": {
       handler(newCourse) {
-        if (newCourse === null || newCourse === undefined) {
-          this.selectedCourse = null;
-        } else {
+        if (newCourse) {
           this.selectedCourse = newCourse;
+        }
+      },
+      immediate: true,
+    },
+
+    "$route.query.specialization": {
+      handler(newSpec) {
+        if (newSpec) {
+          this.selectedSpec = newSpec;
         }
       },
       immediate: true,
     },
     "$route.query.sort_by": {
       handler(newSort) {
-        if (newSort === null || newSort === undefined) {
-          this.selectedSort = null;
-        } else {
+        if (newSort) {
           this.selectedSort = newSort;
         }
       },

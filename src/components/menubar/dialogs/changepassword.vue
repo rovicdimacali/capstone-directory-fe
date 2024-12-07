@@ -24,6 +24,7 @@
           v-model="changeForm.current_password"
           placeholder="Current Password"
           toggleMask
+          :feedback="false"
         />
         <small v-if="validationErrors.current_password" style="color: red">{{
           validationErrors.current_password
@@ -41,6 +42,21 @@
         />
         <small v-if="validationErrors.new_password" style="color: red">{{
           validationErrors.new_password
+        }}</small>
+      </div>
+      <div
+        class="input-container col-5"
+        style="flex-grow: 1; flex-basis: 350px"
+      >
+        <label for="confirm_password">Confirm Password</label>
+        <Password
+          v-model="changeForm.confirm_password"
+          placeholder="Confirm Password"
+          toggleMask
+          :feedback="false"
+        />
+        <small v-if="validationErrors.confirm_password" style="color: red">{{
+          validationErrors.confirm_password
         }}</small>
       </div>
     </div>
@@ -68,6 +84,7 @@ export default {
       changeForm: {
         current_password: null,
         new_password: null,
+        confirm_password: null,
       },
       isLoading: false,
       validationErrors: [],
@@ -80,6 +97,7 @@ export default {
     changeForm: {
       current_password: { required: true, minLength: 1, maxLength: 255 },
       new_password: { required: true, maxLength: 255 },
+      confirm_password: { required: true, maxLength: 255 },
     },
   },
 
@@ -91,7 +109,12 @@ export default {
             current_password: Yup.string().required(
               "Current Password is required"
             ),
-            new_password: Yup.string().required("New Password is required"),
+            new_password: Yup.string()
+              .required("New Password is required")
+              .min(6, "New Password must be at least 6 characters"),
+            confirm_password: Yup.string()
+              .oneOf([Yup.ref("new_password"), null], "Passwords must match")
+              .required("Confirm Password is required"),
           })
           .validate(this.changeForm, { abortEarly: false });
 

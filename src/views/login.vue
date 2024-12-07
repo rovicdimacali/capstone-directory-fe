@@ -100,8 +100,13 @@ export default {
             localStorage.setItem("token", response.access_token);
 
             const me = await auth.me();
+            console.log("pumasok", me);
             if (me) {
               localStorage.setItem("role", me.role);
+              localStorage.setItem("course", me.course);
+              localStorage.setItem("specialization", me.specialization);
+              localStorage.setItem("first_name", me.first_name);
+
               this.$router.push("/capstone-directory");
             }
           }

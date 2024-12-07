@@ -29,7 +29,7 @@
         class="input-container col-5"
         style="flex-grow: 1; flex-basis: 350px"
       >
-        <label for="middle_name">Middle Name</label>
+        <label for="middle_name">Middle Name (Optional)</label>
         <InputText v-model="userForm.middle_name" />
         <small v-if="validationErrors.middle_name" style="color: red">{{
           validationErrors.middle_name
@@ -74,31 +74,38 @@
           v-model="userForm.role"
           :options="roles"
           placeholder="Select a Role"
+          :disabled="userForm.role === 'student'"
         />
         <small v-if="validationErrors.role" style="color: red">{{
           validationErrors.role
         }}</small>
       </div>
       <div
+        v-if="userForm.role !== 'administrator'"
         class="input-container col-5"
         style="flex-grow: 1; flex-basis: 350px"
       >
-        <label for="course">Course</label>
+        <label for="course">Program</label>
         <Select
           v-model="userForm.course"
           :options="courses"
-          placeholder="Select a Course"
+          placeholder="Select a Program"
         />
         <small v-if="validationErrors.course" style="color: red">{{
           validationErrors.course
         }}</small>
       </div>
       <div
+        v-if="userForm.role !== 'administrator'"
         class="input-container col-5"
         style="flex-grow: 1; flex-basis: 350px"
       >
         <label for="specialization">Specialization</label>
-        <InputText v-model="userForm.specialization" />
+        <Select
+          v-model="userForm.specialization"
+          :options="specializations[userForm.course]"
+          placeholder="Select a Specialization"
+        />
         <small v-if="validationErrors.specialization" style="color: red">{{
           validationErrors.specialization
         }}</small>
@@ -140,6 +147,15 @@ export default {
       validationErrors: {},
       roles: ["student", "faculty", "capstone coordinator", "administrator"],
       courses: ["IT", "CS", "IS"],
+      specializations: {
+        IT: [
+          "Automation",
+          "Network and Security",
+          "Web and Mobile App Development",
+        ],
+        IS: ["Business Analytics", "Service Management"],
+        CS: ["Core Computer Science", "Game Development", "Data Science"],
+      },
     };
   },
 

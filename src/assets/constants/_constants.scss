@@ -1,3 +1,15 @@
+:root {
+  --p-inputtext-focus-ring-color: rgb(126, 126, 126) !important;
+  --p-select-focus-ring-color: rgb(126, 126, 126) !important;
+  --p-select-option-selected-background: var(--p-surface-100) !important;
+  --p-select-option-selected-color: black !important;
+}
+
+.p-select-option.p-select-option-selected.p-focus {
+  background: var(--p-select-option-selected-background) !important;
+  color: var(--p-select-option-selected-color) !important;
+}
+
 .row {
   display: flex;
 }
