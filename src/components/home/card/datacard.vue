@@ -35,14 +35,6 @@
         "
         raised
       />
-      <Button
-        text
-        label="Details"
-        class="action-btn"
-        severity="success"
-        @click="detailsVisible = true"
-        raised
-      />
     </div>
     <div v-else class="actions-container wrap" style="gap: 5px">
       <a :href="project?.full_document" target="_blank"
