@@ -37,14 +37,27 @@
           >
             <div>
               <span class="font-medium block mb-2">Notifications</span>
-              <div
+              <router-link
                 v-for="notif in notifications"
                 :key="notif.id"
-                class="notification-col col-5"
-                @click="markAsRead(notif.id)"
+                :to="
+                  notif.action?.includes('best project')
+                    ? '/capstone-directory?page=0&is_best_capstone=true&is_approved=true'
+                    : notif.action?.includes('APPROVED')
+                    ? '/capstone-directory?page=0&is_approved=true'
+                    : notif.action?.includes('REJECTED')
+                    ? '/capstone-directory?page=0&is_approved=false'
+                    : ''
+                "
+                style="text-decoration: none; color: black"
               >
-                <p :class="notif.is_read ? '' : 'bold'">{{ notif.action }}</p>
-              </div>
+                <div
+                  class="notification-col col-5"
+                  @click="markAsRead(notif.id)"
+                >
+                  <p :class="notif.is_read ? '' : 'bold'">{{ notif.action }}</p>
+                </div>
+              </router-link>
             </div>
           </div>
         </Popover>
@@ -121,8 +134,6 @@ export default {
     this.pollingInterval = setInterval(() => {
       this.fetchNotifications();
     }, 3000);
-
-    console.log(localStorage.getItem("first_name"));
 
     this.first_name = localStorage.getItem("first_name");
 

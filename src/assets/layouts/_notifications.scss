@@ -1,19 +1,23 @@
-.notification-col {
-  padding: 10px;
-  max-width: 300px;
-  transition: 0.3s all;
-  cursor: pointer;
+a {
+  text-decoration: none;
+  color: #000;
+  .notification-col {
+    padding: 10px;
+    max-width: 300px;
+    transition: 0.3s all;
+    cursor: pointer;
 
-  &:hover {
-    background: #e0e0e0;
-  }
+    &:hover {
+      background: #e0e0e0;
+    }
 
-  p {
-    margin: 0;
-    font-size: 14px;
+    p {
+      margin: 0;
+      font-size: 14px;
 
-    &.bold {
-      font-weight: 800;
+      &.bold {
+        font-weight: 800;
+      }
     }
   }
 }
