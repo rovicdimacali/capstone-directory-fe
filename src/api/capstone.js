@@ -98,7 +98,7 @@ export const capstone = {
   reject: async (id) => {
     const response = await axios.post(`/capstone-projects/projects/approve/`, {
       project_id: id,
-      is_approved: null,
+      is_approved: false,
     });
     return response.data;
   },
