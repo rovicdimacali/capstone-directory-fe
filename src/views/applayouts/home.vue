@@ -64,7 +64,7 @@ export default {
       const responseBest = await capstone.get(0, null, true, null, null, null);
       this.bestCount = responseBest.count;
 
-      const repsonseAll = await capstone.get(0, null, null, null, null, null);
+      const repsonseAll = await capstone.get(0, null, null, true, null, null);
       this.allCount = repsonseAll.count;
     },
 
