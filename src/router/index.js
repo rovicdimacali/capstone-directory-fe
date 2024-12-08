@@ -14,8 +14,9 @@ const router = createRouter({
   routes: [
     {
       path: "/",
-      redirect: "/capstone-directory",
+      redirect: "/capstone-directory?page=0&is_approved=true",
     },
+
     {
       path: "/capstone-directory",
       name: "applayout",
@@ -27,6 +28,16 @@ const router = createRouter({
           component: home,
           meta: {
             requiresAuth: true,
+          },
+          beforeEnter: (to, from, next) => {
+            // Redirect to include query parameters if they are missing
+            if (!to.query.page || !to.query.is_approved) {
+              return next({
+                path: "/capstone-directory",
+                query: { page: "0", is_approved: "true" },
+              });
+            }
+            next();
           },
         },
         {
