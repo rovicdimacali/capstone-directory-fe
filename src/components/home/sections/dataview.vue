@@ -10,7 +10,6 @@
         <small>Press Enter to Search</small>
       </div>
       <Select
-        v-if="role === 'administrator'"
         v-model="selectedCourse"
         :options="courses"
         placeholder="Select Program"
@@ -19,7 +18,6 @@
         showClear
       />
       <Select
-        v-if="role !== 'student'"
         v-model="selectedSpec"
         :options="specializations[selectedCourse]"
         placeholder="Select Specialization"
@@ -119,14 +117,6 @@ export default {
 
   mounted() {
     this.role = localStorage.getItem("role");
-    this.selectedCourse =
-      localStorage.getItem("course") !== "null"
-        ? localStorage.getItem("course")
-        : null;
-    this.selectedSpec =
-      localStorage.getItem("specialization") !== "null"
-        ? localStorage.getItem("specialization")
-        : null;
   },
 
   watch: {
@@ -138,10 +128,19 @@ export default {
       },
       immediate: true,
     },
+
     "$route.query.course": {
       handler(newCourse) {
         if (newCourse) {
           this.selectedCourse = newCourse;
+        } else {
+          // Create a copy of the query object
+          const newQuery = { ...this.$route.query };
+          // Remove the `course` and `specialization` keys
+          delete newQuery.course;
+          delete newQuery.specialization;
+          // Update the route
+          this.$router.push({ query: newQuery });
         }
       },
       immediate: true,

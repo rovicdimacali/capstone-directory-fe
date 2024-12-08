@@ -114,41 +114,23 @@ export default {
         this.currentPage = this.$route.query.page
           ? parseInt(this.$route.query.page)
           : 0;
-        if (this.role === "administrator") {
-          this.fetchProjects(
-            this.$route.query.page ? parseInt(this.$route.query.page) : 0,
-            this.$route.query.search ? this.$route.query.search : null,
-            this.$route.query.is_best_capstone
-              ? this.$route.query.is_best_capstone
-              : null,
-            this.$route.query.is_approved,
-            this.$route.query.is_ip_registered
-              ? this.$route.query.is_ip_registered
-              : null,
-            this.$route.query.course ? this.$route.query.course : null,
-            this.$route.query.specialization
-              ? this.$route.query.specialization
-              : null,
-            this.$route.query.sort_by ? this.$route.query.sort_by : null
-          );
-        } else {
-          this.fetchProjects(
-            this.$route.query.page ? parseInt(this.$route.query.page) : 0,
-            this.$route.query.search ? this.$route.query.search : null,
-            this.$route.query.is_best_capstone
-              ? this.$route.query.is_best_capstone
-              : null,
-            this.$route.query.is_approved,
-            this.$route.query.is_ip_registered
-              ? this.$route.query.is_ip_registered
-              : null,
-            null,
-            this.$route.query.specialization
-              ? this.$route.query.specialization
-              : null,
-            this.$route.query.sort_by ? this.$route.query.sort_by : null
-          );
-        }
+
+        this.fetchProjects(
+          this.$route.query.page ? parseInt(this.$route.query.page) : 0,
+          this.$route.query.search ? this.$route.query.search : null,
+          this.$route.query.is_best_capstone
+            ? this.$route.query.is_best_capstone
+            : null,
+          this.$route.query.is_approved,
+          this.$route.query.is_ip_registered
+            ? this.$route.query.is_ip_registered
+            : null,
+          this.$route.query.course ? this.$route.query.course : null,
+          this.$route.query.specialization
+            ? this.$route.query.specialization
+            : null,
+          this.$route.query.sort_by ? this.$route.query.sort_by : null
+        );
       },
       immediate: true,
     },
