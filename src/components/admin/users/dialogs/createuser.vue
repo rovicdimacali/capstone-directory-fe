@@ -19,7 +19,9 @@
         class="input-container col-5"
         style="flex-grow: 1; flex-basis: 350px"
       >
-        <label for="first_name">First Name</label>
+        <label for="first_name"
+          >First Name <span style="color: red">*</span></label
+        >
         <InputText v-model="userForm.first_name" />
         <small v-if="validationErrors.first_name" style="color: red">{{
           validationErrors.first_name
@@ -39,7 +41,9 @@
         class="input-container col-5"
         style="flex-grow: 1; flex-basis: 350px"
       >
-        <label for="last_name">Last Name</label>
+        <label for="last_name"
+          >Last Name <span style="color: red">*</span></label
+        >
         <InputText v-model="userForm.last_name" />
         <small v-if="validationErrors.last_name" style="color: red">{{
           validationErrors.last_name
@@ -59,7 +63,7 @@
         class="input-container col-5"
         style="flex-grow: 1; flex-basis: 350px"
       >
-        <label for="email">Email</label>
+        <label for="email">Email <span style="color: red">*</span></label>
         <InputText v-model="userForm.email" />
         <small v-if="validationErrors.email" style="color: red">{{
           validationErrors.email
@@ -69,7 +73,7 @@
         class="input-container col-5"
         style="flex-grow: 1; flex-basis: 350px"
       >
-        <label for="role">Role</label>
+        <label for="role">Role <span style="color: red">*</span></label>
         <Select
           v-model="userForm.role"
           :options="roles"
@@ -84,7 +88,7 @@
         class="input-container col-5"
         style="flex-grow: 1; flex-basis: 350px"
       >
-        <label for="course">Program</label>
+        <label for="course">Program </label>
         <Select
           v-model="userForm.course"
           :options="courses"

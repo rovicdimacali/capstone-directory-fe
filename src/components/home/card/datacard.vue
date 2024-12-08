@@ -25,7 +25,10 @@
           raised
       /></a>
       <Button
-        v-if="this.$route.query.is_approved === 'pending' || this.$route.query.is_approved === 'false'"
+        v-if="
+          this.$route.query.is_approved === 'pending' ||
+          this.$route.query.is_approved === 'false'
+        "
         text
         label="Update"
         class="action-btn"
@@ -74,7 +77,7 @@
         raised
       />
       <Button
-        v-if="role === 'administrator' && project.is_best_capstone === false"
+        v-if="role === 'administrator' && project?.is_best_project === false"
         icon="pi pi-check"
         label="Best Project"
         class="action-btn"
@@ -84,7 +87,7 @@
         raised
       />
       <Button
-        v-if="role === 'administrator' && project.is_best_capstone === true"
+        v-if="role === 'administrator' && project?.is_best_project === true"
         icon="pi pi-times"
         label="Best Project"
         class="action-btn"
@@ -133,17 +136,6 @@ export default {
       role: null,
       detailsVisible: false,
     };
-  },
-
-  computed: {
-    shouldDisplay() {
-      const query = this.$route.query;
-      return (
-        !Object.keys(query).length ||
-        query.is_best_capstone === "true" ||
-        query.page !== null
-      );
-    },
   },
 
   methods: {

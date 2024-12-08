@@ -37,7 +37,8 @@ export default {
 
     changePage(event) {
       let page = event.page;
-      this.$router.push({ path: this.$route.path, query: { page } });
+      const query = this.$route.query;
+      this.$router.push({ path: this.$route.path, query: { ...query, page } });
     },
   },
 

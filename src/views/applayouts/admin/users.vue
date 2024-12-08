@@ -75,7 +75,8 @@ export default {
 
     changePage(event) {
       let page = event.page;
-      this.$router.push({ path: this.$route.path, query: { page } });
+      const query = this.$route.query;
+      this.$router.push({ path: this.$route.path, query: { ...query, page } });
     },
   },
 
@@ -88,86 +89,19 @@ export default {
   },
 
   watch: {
-    "$route.query.page": {
-      handler(newPage) {
-        this.currentPage = newPage ? parseInt(newPage) : 0;
+    "$route.query": {
+      handler() {
+        this.currentPage = this.$route.query.page
+          ? parseInt(this.$route.query.page)
+          : 0;
         this.fetchUsers(
-          newPage ? parseInt(newPage) : 0,
+          this.$route.query.page ? parseInt(this.$route.query.page) : 0,
           this.$route.query.search ? this.$route.query.search : null,
           this.$route.query.course ? this.$route.query.course : null,
           this.$route.query.role ? this.$route.query.role : null
         );
       },
       immediate: true, // Call the handler immediately on component mount
-    },
-
-    "$route.query.search": {
-      handler(newSearch) {
-        if (newSearch === null || newSearch === undefined) {
-          const { query, ...route } = this.$route;
-          delete query.search;
-          this.$router.push({ ...route, query });
-          this.fetchUsers(
-            0,
-            null,
-            this.$route.query.course ? this.$route.query.course : null,
-            this.$route.query.role ? this.$route.query.role : null
-          );
-        } else {
-          this.fetchUsers(
-            0,
-            newSearch ? newSearch : "",
-            this.$route.query.course ? this.$route.query.course : null,
-            this.$route.query.role ? this.$route.query.role : null
-          );
-        }
-      },
-    },
-
-    "$route.query.course": {
-      handler(newCourse) {
-        if (newCourse === null || newCourse === undefined) {
-          const { query, ...route } = this.$route;
-          delete query.course;
-          this.$router.push({ ...route, query });
-          this.fetchUsers(
-            0,
-            this.$route.query.search ? this.$route.query.search : null,
-            null,
-            this.$route.query.role ? this.$route.query.role : null
-          );
-        } else {
-          this.fetchUsers(
-            0,
-            this.$route.query.search ? this.$route.query.search : null,
-            newCourse ? newCourse : "",
-            this.$route.query.role ? this.$route.query.role : null
-          );
-        }
-      },
-    },
-
-    "$route.query.role": {
-      handler(newRole) {
-        if (newRole === null || newRole === undefined) {
-          const { query, ...route } = this.$route;
-          delete query.search;
-          this.$router.push({ ...route, query });
-          this.fetchUsers(
-            0,
-            this.$route.query.search ? this.$route.query.search : null,
-            this.$route.query.course ? this.$route.query.course : null,
-            null
-          );
-        } else {
-          this.fetchUsers(
-            0,
-            this.$route.query.search ? this.$route.query.search : null,
-            this.$route.query.course ? this.$route.query.course : null,
-            newRole ? newRole : ""
-          );
-        }
-      },
     },
   },
 };
