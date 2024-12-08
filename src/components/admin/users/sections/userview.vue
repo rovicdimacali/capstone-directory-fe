@@ -131,7 +131,8 @@
               <Button
                 v-if="
                   role === 'administrator' &&
-                  slotProps.data.email !== 'cicscapstone@gmail.com'
+                  slotProps.data.email !== 'cicscapstone@gmail.com' &&
+                  slotProps.data.email !== email
                 "
                 severity="contrast"
                 label="Update"
@@ -146,7 +147,8 @@
               <Button
                 v-if="
                   role === 'administrator' &&
-                  slotProps.data.email !== 'cicscapstone@gmail.com'
+                  slotProps.data.email !== 'cicscapstone@gmail.com' &&
+                  slotProps.data.email !== email
                 "
                 label="Delete"
                 class="action-btn"
@@ -183,6 +185,7 @@ export default {
       isUploading: false,
       roles: null,
       role: null,
+      email: null,
       assignVisible: false,
       updateVisible: false,
       selectedUserAssign: null,
@@ -272,6 +275,7 @@ export default {
 
   mounted() {
     this.role = localStorage.getItem("role");
+    this.email = localStorage.getItem("email");
 
     if (this.role === "capstone coordinator") {
       this.roles = ["student", "faculty"];

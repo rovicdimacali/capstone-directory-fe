@@ -104,7 +104,7 @@ export default {
 
             if (me) {
               localStorage.setItem("role", me?.role);
-
+              localStorage.setItem("email", me?.email);
               localStorage.setItem("course", me?.course);
               localStorage.setItem("specialization", me?.specialization);
               localStorage.setItem("first_name", me?.first_name);
