@@ -253,12 +253,20 @@
           validationErrors?.specialization
         }}</small>
       </div>
-      <div class="row" style="justify-content: center">
+      <div
+        class="wrap"
+        style="justify-content: center; align-items: center; gap: 5px"
+      >
         <Button
           label="Submit Capstone"
           style="margin-block: 20px; min-width: 310px; max-width: 400px"
           type="submit"
           :loading="isLoading"
+        />
+        <Button
+          label="Cancel"
+          severity="secondary"
+          @click="this.$router.back"
         />
       </div>
     </form>

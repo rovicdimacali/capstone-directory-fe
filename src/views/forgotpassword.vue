@@ -19,6 +19,11 @@
           placeholder="Email"
         />
         <Button label="SUBMIT" type="submit" :loading="isLoading" />
+        <Button
+          label="Cancel"
+          severity="secondary"
+          @click="this.$router.back"
+        />
       </form>
     </div>
   </div>
