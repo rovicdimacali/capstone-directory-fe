@@ -85,10 +85,7 @@ router.beforeEach((to, from, next) => {
 
   // Handle role-based redirection for authenticated users
   if (token && role) {
-    if (role === "administrator") {
-      // Allow admins to access all routes
-      return next();
-    } else if (role === "student") {
+    if (role === "student") {
       if (
         to.path !== "/capstone-directory" &&
         to.path !== "/upload" &&
@@ -124,10 +121,12 @@ router.beforeEach((to, from, next) => {
       ) {
         return next("/capstone-directory?page=0&is_approved=true"); // Redirect coordinators to their home
       }
+    } else if (role === "administrator") {
+      return next();
     } else {
       // If the role is unrecognized, clear storage and redirect to login
-      localStorage.clear();
-      return next({ name: "login" });
+      // localStorage.clear();
+      // return next({ name: "login" });
     }
   }
 
