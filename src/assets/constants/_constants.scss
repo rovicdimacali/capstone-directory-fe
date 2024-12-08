@@ -3,6 +3,7 @@
   --p-select-focus-ring-color: rgb(126, 126, 126) !important;
   --p-select-option-selected-background: var(--p-surface-100) !important;
   --p-select-option-selected-color: black !important;
+  color-scheme: light !important; /* This will prevent dark mode adaptation */
 }
 
 .p-select-option.p-select-option-selected.p-focus {
