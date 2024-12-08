@@ -129,7 +129,10 @@
                 "
               />
               <Button
-                v-if="role === 'administrator'"
+                v-if="
+                  role === 'administrator' &&
+                  slotProps.data.email !== 'cicscapstone@gmail.com'
+                "
                 severity="contrast"
                 label="Update"
                 class="action-btn"
@@ -141,7 +144,10 @@
                 "
               />
               <Button
-                v-if="role === 'administrator'"
+                v-if="
+                  role === 'administrator' &&
+                  slotProps.data.email !== 'cicscapstone@gmail.com'
+                "
                 label="Delete"
                 class="action-btn"
                 @click="deleteUser(slotProps.data?.id)"

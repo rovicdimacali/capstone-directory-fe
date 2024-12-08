@@ -74,7 +74,9 @@
           v-model="userForm.role"
           :options="roles"
           placeholder="Select a Role"
-          :disabled="userForm.role === 'student'"
+          :disabled="
+            userForm.role === 'student' || userForm.role === 'administrator'
+          "
         />
         <small v-if="validationErrors.role" style="color: red">{{
           validationErrors.role
