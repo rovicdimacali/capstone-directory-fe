@@ -39,6 +39,9 @@ const MyPreset = definePreset(Material, {
 app.use(PrimeVue, {
   theme: {
     preset: MyPreset,
+    options: {
+      darkModeSelector: ".fake-dark-selector",
+    },
   },
 });
 
