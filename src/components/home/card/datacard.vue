@@ -25,7 +25,7 @@
           raised
       /></a>
       <Button
-        v-if="this.$route.query.is_approved === 'pending'"
+        v-if="this.$route.query.is_approved === 'pending' || this.$route.query.is_approved === 'false'"
         text
         label="Update"
         class="action-btn"
