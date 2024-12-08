@@ -32,6 +32,9 @@
         >
       </div>
       <div class="admin-links col">
+        <router-link v-if="role === 'administrator'" to="/activity-logs"
+          >Logs</router-link
+        >
         <router-link
           v-if="role === 'administrator' || role === 'capstone coordinator'"
           to="/users"

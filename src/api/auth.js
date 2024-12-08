@@ -6,6 +6,11 @@ export const auth = {
     return response.data;
   },
 
+  register: async (obj) => {
+    const response = await axios.post("/users/student-register/", obj);
+    return response.data;
+  },
+
   me: async () => {
     const response = await axios.get("/users/me/");
     return response.data;

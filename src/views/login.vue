@@ -36,6 +36,7 @@
         <RouterLink to="/forgot-password"
           ><small>Forgot Password?</small></RouterLink
         >
+        <RouterLink to="/register"><small>Register Here</small></RouterLink>
       </form>
     </div>
   </div>

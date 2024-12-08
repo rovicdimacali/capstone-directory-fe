@@ -90,11 +90,13 @@ export default {
           await auth.resetPassword(this.resetForm);
           this.$toast.add({
             severity: "success",
-            summary: "Success",
-            detail: "Password reset successfully!",
+            summary: "Password reset successfully!",
+            detail: "Redirecting to login",
             life: 3000,
           });
-          this.$router.push("/login");
+          setTimeout(() => {
+            this.$router.push("/login");
+          }, 3000);
         } catch (error) {
           console.error(error);
           this.$toast.add({
