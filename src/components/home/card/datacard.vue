@@ -77,7 +77,12 @@
         raised
       />
       <Button
-        v-if="role === 'administrator' && project?.is_best_project === false"
+        v-if="
+          role === 'administrator' &&
+          project?.is_best_project === false &&
+          project?.is_approved !== 'false' &&
+          project?.is_approved !== 'pending'
+        "
         icon="pi pi-check"
         label="Best Project"
         class="action-btn"
@@ -87,7 +92,12 @@
         raised
       />
       <Button
-        v-if="role === 'administrator' && project?.is_best_project === true"
+        v-if="
+          role === 'administrator' &&
+          project?.is_best_project === true &&
+          project?.is_approved !== 'false' &&
+          project?.is_approved !== 'pending'
+        "
         icon="pi pi-times"
         label="Best Project"
         class="action-btn"

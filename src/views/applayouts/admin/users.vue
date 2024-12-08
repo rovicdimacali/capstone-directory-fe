@@ -57,7 +57,7 @@ export default {
       // Set up a new interval to poll every 10 seconds
       this.intervalId = setInterval(() => {
         this.fetchUsers(
-          this.page,
+          this.$route.query.page ? parseInt(this.$route.query.page) : 0,
           this.$route.query.search ? this.$route.query.search : null,
           this.$route.query.course ? this.$route.query.course : null,
           this.$route.query.role ? this.$route.query.role : null
