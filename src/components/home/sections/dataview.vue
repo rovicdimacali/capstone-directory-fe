@@ -119,6 +119,14 @@ export default {
 
   mounted() {
     this.role = localStorage.getItem("role");
+    this.selectedCourse =
+      localStorage.getItem("course") !== "null"
+        ? localStorage.getItem("course")
+        : null;
+    this.selectedSpec =
+      localStorage.getItem("specialization") !== "null"
+        ? localStorage.getItem("specialization")
+        : null;
   },
 
   watch: {

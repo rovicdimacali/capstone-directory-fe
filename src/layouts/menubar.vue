@@ -15,17 +15,33 @@
           to="/capstone-directory?page=0&is_approved=true&is_ip_registered=true"
           >IP-Registered</router-link
         >
-        <router-link to="/upload">Upload</router-link>
-        <router-link to="/capstone-directory?page=0&is_approved=pending"
+        <router-link
+          v-if="role === 'student' || role === 'administrator'"
+          to="/upload"
+          >Upload</router-link
+        >
+        <router-link
+          v-if="role === 'student' || role === 'administrator'"
+          to="/capstone-directory?page=0&is_approved=pending"
           >Approvals</router-link
         >
-        <router-link to="/capstone-directory?page=0&is_approved=false"
+        <router-link
+          v-if="role === 'student' || role === 'administrator'"
+          to="/capstone-directory?page=0&is_approved=false"
           >Rejects</router-link
         >
       </div>
       <div class="admin-links col">
-        <router-link v-if="role !== 'student'" to="/users">Users</router-link>
-        <router-link v-if="role !== 'student'" to="/groups">Groups</router-link>
+        <router-link
+          v-if="role === 'administrator' || role === 'capstone coordinator'"
+          to="/users"
+          >Users</router-link
+        >
+        <router-link
+          v-if="role === 'administrator' || role === 'capstone coordinator'"
+          to="/groups"
+          >Groups</router-link
+        >
       </div>
     </div>
     <div class="user-links col">

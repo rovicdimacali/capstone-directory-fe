@@ -80,7 +80,7 @@ router.beforeEach((to, from, next) => {
   }
 
   if (!requiresAuth && token) {
-    return next("/capstone-directory?page=0");
+    return next("/capstone-directory?page=0&is_approved=true");
   }
 
   // Handle role-based redirection for authenticated users
@@ -88,24 +88,41 @@ router.beforeEach((to, from, next) => {
     if (role === "administrator") {
       // Allow admins to access all routes
       return next();
-    } else if (role === "student" || role === "faculty") {
+    } else if (role === "student") {
       if (
         to.path !== "/capstone-directory" &&
         to.path !== "/upload" &&
         to.path !== "/ip-registered" &&
         to.path !== "/approvals"
       ) {
-        return next("/capstone-directory?page=0"); // Redirect students to their home
+        return next("/capstone-directory?page=0&is_approved=true"); // Redirect students to their home
+      }
+    } else if (role === "faculty") {
+      if (
+        to.path === "/capstone-directory" &&
+        (to.query.is_approved === "pending" || to.query.is_approved === "false")
+      ) {
+        return next("/capstone-directory?page=0&is_approved=true"); // Redirect to the allowed page
+      }
+
+      if (to.path !== "/capstone-directory" && to.path !== "/ip-registered") {
+        return next("/capstone-directory?page=0&is_approved=true"); // Redirect students to their home
       }
     } else if (role === "capstone coordinator") {
       if (
+        to.path === "/capstone-directory" &&
+        (to.query.is_approved === "pending" || to.query.is_approved === "false")
+      ) {
+        return next("/capstone-directory?page=0&is_approved=true"); // Redirect to the allowed page
+      }
+
+      if (
         to.path !== "/capstone-directory" &&
-        to.path !== "/upload" &&
         to.path !== "/ip-registered" &&
         to.path !== "/groups" &&
         to.path !== "/users"
       ) {
-        return next("/capstone-directory?page=0"); // Redirect students to their home
+        return next("/capstone-directory?page=0&is_approved=true"); // Redirect coordinators to their home
       }
     } else {
       // If the role is unrecognized, clear storage and redirect to login

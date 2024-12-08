@@ -22,6 +22,16 @@ nav {
     }
   }
 
+  .user-info {
+    @include m-phone {
+      display: none;
+    }
+
+    @include sm-phone {
+      display: none;
+    }
+  }
+
   .burger-icon {
     cursor: pointer;
     border-radius: 100px;

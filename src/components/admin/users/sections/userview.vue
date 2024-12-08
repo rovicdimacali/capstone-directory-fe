@@ -69,6 +69,7 @@
         @click="createVisible = true"
       />
       <FileUpload
+        v-if="role === 'administrator'"
         mode="basic"
         name="demo[]"
         accept=".xlsx"

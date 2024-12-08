@@ -19,7 +19,7 @@
         class="input-container col-5"
         style="flex-grow: 1; flex-basis: 350px"
       >
-        <label for="name">Group Name</label>
+        <label for="name">Group Name <span style="color: red">*</span></label>
         <InputText
           v-model="groupForm.name"
           placeholder="Dela Cruz, Delos Santos, Ramos, Reyes"
@@ -32,7 +32,9 @@
         class="input-container col-5"
         style="flex-grow: 1; flex-basis: 350px"
       >
-        <label for="academic_year">Academic Year</label>
+        <label for="academic_year"
+          >Academic Year <span style="color: red">*</span></label
+        >
         <InputText
           v-model="groupForm.academic_year"
           placeholder="ex. 2023-2024"
@@ -45,7 +47,7 @@
         class="input-container col-5"
         style="flex-grow: 1; flex-basis: 350px"
       >
-        <label for="course">Program</label>
+        <label for="course">Program <span style="color: red">*</span></label>
         <Select
           v-model="groupForm.course"
           :options="courses"
@@ -59,8 +61,14 @@
         class="input-container col-5"
         style="flex-grow: 1; flex-basis: 350px"
       >
-        <label for="specialization">Specialization</label>
-        <InputText v-model="groupForm.specialization" />
+        <label for="specialization"
+          >Specialization <span style="color: red">*</span></label
+        >
+        <Select
+          v-model="groupForm.specialization"
+          :options="specializations[groupForm.course]"
+          placeholder="Select a Specialization"
+        />
         <small v-if="validationErrors.specialization" style="color: red">{{
           validationErrors.specialization
         }}</small>
@@ -91,6 +99,15 @@ export default {
       isLoading: false,
       validationErrors: {},
       courses: ["IT", "CS", "IS"],
+      specializations: {
+        IT: [
+          "Automation",
+          "Network and Security",
+          "Web and Mobile App Development",
+        ],
+        IS: ["Business Analytics", "Service Management"],
+        CS: ["Core Computer Science", "Game Development", "Data Science"],
+      },
     };
   },
 
@@ -99,7 +116,7 @@ export default {
       name: { required: true, minLength: 1, maxLength: 255 },
       academic_year: { required: false, maxLength: 255 },
       course: { required: true, maxLength: 255 },
-      specialization: { required: false, maxLength: 255 },
+      specialization: { required: true, maxLength: 255 },
     },
   },
 
@@ -116,7 +133,7 @@ export default {
                 "Academic Year must be in the format YYYY-YYYY (No Spaces)"
               ),
             course: Yup.string().required("Course is required"),
-            specialization: Yup.string().nullable(),
+            specialization: Yup.string().required("Specialization is required"),
           })
           .validate(this.groupForm, { abortEarly: false });
 
