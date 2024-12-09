@@ -53,6 +53,24 @@
         class="input-container col-5"
         style="flex-grow: 1; flex-basis: 350px"
       >
+        <label for="role">Role <span style="color: red">*</span></label>
+        <Select
+          v-model="userForm.role"
+          :options="roles"
+          placeholder="Select a Role"
+          :disabled="
+            userForm.role === 'student' || userForm.role === 'administrator'
+          "
+        />
+        <small v-if="validationErrors.role" style="color: red">{{
+          validationErrors.role
+        }}</small>
+      </div>
+      <div
+        v-if="userForm.role === 'student'"
+        class="input-container col-5"
+        style="flex-grow: 1; flex-basis: 350px"
+      >
         <label for="student_number">Student Number</label>
         <InputText v-model="userForm.student_number" />
         <small v-if="validationErrors.student_number" style="color: red">{{
@@ -69,23 +87,7 @@
           validationErrors.email
         }}</small>
       </div>
-      <div
-        class="input-container col-5"
-        style="flex-grow: 1; flex-basis: 350px"
-      >
-        <label for="role">Role <span style="color: red">*</span></label>
-        <Select
-          v-model="userForm.role"
-          :options="roles"
-          placeholder="Select a Role"
-          :disabled="
-            userForm.role === 'student' || userForm.role === 'administrator'
-          "
-        />
-        <small v-if="validationErrors.role" style="color: red">{{
-          validationErrors.role
-        }}</small>
-      </div>
+
       <div
         v-if="userForm.role !== 'administrator'"
         class="input-container col-5"
