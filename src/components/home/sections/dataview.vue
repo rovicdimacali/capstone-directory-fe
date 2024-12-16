@@ -4,26 +4,27 @@
       <div class="search-input col-5">
         <InputText
           v-model="search"
-          placeholder="Search"
-          @keyup.enter="handleSearch"
+          placeholder="Search by title, keywords, date (YYYY-MM-DD), or academic year"
+          @input="handleSearch"
         />
-        <small>Press Enter to Search</small>
       </div>
       <Select
         v-model="selectedCourse"
         :options="courses"
-        placeholder="Select Program"
+        placeholder="Program"
         class="dropdown"
         @change="handleCourseChange"
         showClear
+        style="max-width: 200px"
       />
       <Select
         v-model="selectedSpec"
         :options="specializations[selectedCourse]"
-        placeholder="Select Specialization"
+        placeholder="Specialization"
         class="dropdown"
         @change="handleSpecializationChange"
         showClear
+        style="max-width: 200px"
       />
       <Select
         v-model="selectedSort"
@@ -34,6 +35,7 @@
         class="dropdown"
         @change="handleSortChange"
         showClear
+        style="max-width: 180px"
       />
     </div>
     <div v-if="projects?.length" class="data-container wrap">
@@ -42,6 +44,7 @@
         :key="project.id"
         :project="project"
         @refresh="this.$emit('refresh')"
+        @bestProject="this.$emit('bestProject')"
       />
     </div>
     <p v-else>No Capstone Projects Fetched.</p>
@@ -50,6 +53,7 @@
 
 <script>
 import datacard from "../card/datacard.vue";
+import debounce from "lodash/debounce";
 
 export default {
   props: ["projects"],
@@ -88,14 +92,13 @@ export default {
         },
       ],
       search: null,
-      role: null,
     };
   },
   methods: {
-    handleSearch() {
+    handleSearch: debounce(function () {
       const query = this.$route.query;
       this.$router.push({ query: { ...query, search: this.search } });
-    },
+    }, 300),
 
     handleCourseChange() {
       const query = this.$route.query;
@@ -113,10 +116,6 @@ export default {
       const query = this.$route.query;
       this.$router.push({ query: { ...query, sort_by: this.selectedSort } });
     },
-  },
-
-  mounted() {
-    this.role = localStorage.getItem("role");
   },
 
   watch: {

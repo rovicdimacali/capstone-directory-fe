@@ -21,6 +21,7 @@
         this.$route.query.sort_by ? this.$route.query.sort_by : null
       )
     "
+    @bestProject="fetchProjectCount"
   />
   <Paginator
     :rows="10"

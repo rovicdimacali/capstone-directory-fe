@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="action-row row-10" style="align-items: center">
-      <div class="user-info col">
+      <div v-if="token" class="user-info col">
         <p style="margin: 0">
           Hello, {{ first_name }}
           <span style="text-transform: capitalize">({{ role }})</span>
@@ -23,7 +23,7 @@
           >Group: {{ group ? group : "Unassigned" }}</small
         >
       </div>
-      <div class="notification-icon">
+      <div v-if="token" class="notification-icon">
         <Button
           icon="pi pi-bell"
           text
@@ -100,6 +100,7 @@ export default {
       first_name: null,
       role: null,
       group: null,
+      token: null,
     };
   },
 
@@ -138,6 +139,8 @@ export default {
     this.pollingInterval = setInterval(() => {
       this.fetchNotifications();
     }, 3000);
+
+    this.token = localStorage.getItem("token");
 
     this.first_name = localStorage.getItem("first_name");
     this.role = localStorage.getItem("role");

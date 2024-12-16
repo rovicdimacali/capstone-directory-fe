@@ -24,6 +24,13 @@ export const users = {
     return response.data;
   },
 
+  getSpecificUsers: async (course) => {
+    const response = await axios.get(
+      `/users/user-view/${course.toLowerCase()}-users/`
+    );
+    return response.data;
+  },
+
   uploadUsers: async (obj) => {
     const response = await axiosUpload.post(
       "/users/user-view/upload-users/",

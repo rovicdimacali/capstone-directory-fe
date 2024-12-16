@@ -22,12 +22,12 @@
         >
         <router-link
           v-if="role === 'student' || role === 'administrator'"
-          to="/capstone-directory?page=0&is_approved=pending"
+          :to="`/capstone-directory?page=0&is_approved=pending&course=${course}`"
           >Approvals</router-link
         >
         <router-link
           v-if="role === 'student' || role === 'administrator'"
-          to="/capstone-directory?page=0&is_approved=false"
+          :to="`/capstone-directory?page=0&is_approved=false&course=${course}`"
           >Rejects</router-link
         >
       </div>
@@ -48,8 +48,18 @@
       </div>
     </div>
     <div class="user-links col">
-      <p @click="changeVisible = true">Change Password</p>
-      <p @click="logout">Logout</p>
+      <p v-if="token" @click="changeVisible = true">Change Password</p>
+      <p @click="logout" v-if="token">Logout</p>
+      <p
+        @click="
+          () => {
+            this.$router.push('/login');
+          }
+        "
+        v-else
+      >
+        Login
+      </p>
     </div>
   </div>
 </template>
@@ -61,6 +71,8 @@ export default {
   data() {
     return {
       role: null,
+      token: null,
+      course: null,
       changeVisible: false,
     };
   },
@@ -89,6 +101,8 @@ export default {
 
   mounted() {
     this.role = localStorage.getItem("role");
+    this.token = localStorage.getItem("token");
+    this.course = localStorage.getItem("course");
   },
 
   watch: {

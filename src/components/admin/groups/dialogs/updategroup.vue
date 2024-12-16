@@ -35,9 +35,10 @@
         <label for="academic_year"
           >Academic Year <span style="color: red">*</span></label
         >
-        <InputText
+        <Select
           v-model="groupForm.academic_year"
-          placeholder="ex. 2023-2024"
+          :options="academic_years"
+          placeholder="Academic Year"
         />
         <small v-if="validationErrors.academic_year" style="color: red">{{
           validationErrors.academic_year
@@ -96,6 +97,7 @@ export default {
     return {
       localVisible: true,
       groupForm: null,
+      academic_years: null,
       isLoading: false,
       validationErrors: {},
       courses: ["IT", "CS", "IS"],
@@ -121,6 +123,16 @@ export default {
   },
 
   methods: {
+    generateAcademicYears() {
+      const currentYear = new Date().getFullYear();
+      const academicYears = [];
+
+      for (let year = 2014; year < currentYear; year++) {
+        academicYears.push(`${year}-${year + 1}`);
+      }
+
+      this.academic_years = academicYears;
+    },
     async validateForm() {
       try {
         await Yup.object()
@@ -182,6 +194,7 @@ export default {
   },
 
   mounted() {
+    this.generateAcademicYears();
     this.groupForm = this.group;
     this.groupForm.name = this.groupForm.name.replace(/\s\(\d{4}-\d{4}\)/, "");
   },

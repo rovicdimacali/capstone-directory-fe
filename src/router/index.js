@@ -26,9 +26,6 @@ const router = createRouter({
           path: "/capstone-directory",
           name: "home",
           component: home,
-          meta: {
-            requiresAuth: true,
-          },
           beforeEnter: (to, from, next) => {
             // Redirect to include query parameters if they are missing
             if (!to.query.page || !to.query.is_approved) {
@@ -50,21 +47,33 @@ const router = createRouter({
         },
         ...adminroutes,
       ],
+      meta: {
+        requiresAuth: false,
+      },
     },
     {
       path: "/login",
       name: "login",
       component: login,
+      meta: {
+        requiresAuth: null,
+      },
     },
     {
       path: "/forgot-password",
       name: "forgotpassword",
       component: forgotpassword,
+      meta: {
+        requiresAuth: null,
+      },
     },
     {
       path: "/register",
       name: "register",
       component: register,
+      meta: {
+        requiresAuth: null,
+      },
     },
     {
       path: "/reset-password",
@@ -82,12 +91,15 @@ const router = createRouter({
           next();
         }
       },
+      meta: {
+        requiresAuth: null,
+      },
     },
   ],
 });
 
 router.beforeEach((to, from, next) => {
-  const requiresAuth = to.meta.requiresAuth || false; // Default to false if meta is undefined
+  const requiresAuth = to.meta.requiresAuth; // Default to false if meta is undefined
   const token = localStorage.getItem("token"); // Auth token
   const role = localStorage.getItem("role"); // User role
 
@@ -96,7 +108,7 @@ router.beforeEach((to, from, next) => {
     return next({ name: "login" });
   }
 
-  if (!requiresAuth && token) {
+  if (requiresAuth === null && token) {
     return next("/capstone-directory?page=0&is_approved=true");
   }
 

@@ -8,11 +8,11 @@
   <div class="datacard" style="flex-basis: 100%; width: 100%; max-width: unset">
     <div class="header col">
       <h3>{{ project?.title }}</h3>
-      <p>{{ formatDate(project?.date_published) }}</p>
+      <p>{{ project?.date_published }}</p>
     </div>
 
     <div
-      v-if="this.role === 'student'"
+      v-if="this.role === 'student' || this.role === null"
       class="actions-container wrap"
       style="gap: 5px"
     >
@@ -70,7 +70,7 @@
 
       <Button
         v-if="role === 'administrator'"
-        label="Delete"
+        label="Archive"
         class="action-btn"
         @click="deleteProject(project?.id)"
         text
@@ -157,7 +157,7 @@ export default {
 
     deleteProject(id) {
       this.$confirm.require({
-        message: "Are you sure you want to delete?",
+        message: "Are you sure you want to archive?",
         header: "Confirmation",
         icon: "pi pi-exclamation-triangle",
         rejectProps: {
@@ -174,7 +174,7 @@ export default {
             this.$toast.add({
               severity: "success",
               summary: "Success",
-              detail: "Project Deleted Successfully.",
+              detail: "Project Archived Successfully.",
               life: 3000,
             });
             this.$emit("refresh");
@@ -183,7 +183,7 @@ export default {
             this.$toast.add({
               severity: "error",
               summary: "Error",
-              detail: "Project was not deleted successfully.",
+              detail: "Project was not archived successfully.",
               life: 3000,
             });
           }
@@ -290,6 +290,7 @@ export default {
               life: 3000,
             });
             this.$emit("refresh");
+            this.$emit("bestProject");
           } catch (error) {
             console.error(error);
             this.$toast.add({
@@ -327,6 +328,7 @@ export default {
               life: 3000,
             });
             this.$emit("refresh");
+            this.$emit("bestProject");
           } catch (error) {
             console.error(error);
             this.$toast.add({

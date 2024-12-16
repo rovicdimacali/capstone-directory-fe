@@ -72,7 +72,7 @@
       </div>
       <div class="input-container col-5">
         <label for="date_published"
-          >Date Published <span style="color: red">*</span></label
+          >Date of Defense <span style="color: red">*</span></label
         >
         <DatePicker
           id="date_published"
@@ -84,6 +84,19 @@
         />
         <small v-if="validationErrors?.date_published" style="color: red">{{
           validationErrors?.date_published
+        }}</small>
+      </div>
+      <div class="input-container col-5">
+        <label for="academic_year"
+          >Academic Year <span style="color: red">*</span></label
+        >
+        <Select
+          v-model="uploadForm.academic_year"
+          :options="academic_years"
+          placeholder="Academic Year"
+        />
+        <small v-if="validationErrors?.academic_year" style="color: red">{{
+          validationErrors?.academic_year
         }}</small>
       </div>
 
@@ -294,7 +307,9 @@ export default {
         date_published: null,
         course: null,
         specialization: null,
+        academic_year: null,
       },
+      academic_years: null,
       courses: ["IT", "CS", "IS"],
       specializations: {
         IT: [
@@ -330,10 +345,23 @@ export default {
       date_published: { required: true },
       course: { required: true },
       specialization: { required: true },
+      academic_year: { required: true },
     },
   },
 
   methods: {
+    generateAcademicYears() {
+      const currentYear = new Date().getFullYear();
+      const academicYears = [];
+
+      for (let year = 2014; year < currentYear; year++) {
+        academicYears.push(`${year}-${year + 1}`);
+      }
+
+      this.academic_years = academicYears;
+      console.log(academicYears);
+    },
+
     onFileSelect(event) {
       this.uploadForm.acm_paper = event.files[0];
     },
@@ -475,6 +503,12 @@ export default {
             date_published: Yup.date().required("Date published is required"),
             course: Yup.string().required("Course is required"),
             specialization: Yup.string().required("Specialization is required"),
+            academic_year: Yup.string()
+              .required("Academic Year is required")
+              .matches(
+                /^\d{4}-\d{4}$/,
+                "Academic Year must be in the format YYYY-YYYY (No Spaces)"
+              ),
           })
           .validate(this.uploadForm, { abortEarly: false });
 
@@ -559,6 +593,7 @@ export default {
     },
   },
   async mounted() {
+    this.generateAcademicYears();
     this.fetchGroups();
     if (this.$route.query.is_edit === "true") {
       await this.fetchProject(this.$route.query.project_id);
