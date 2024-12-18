@@ -16,6 +16,11 @@ export const groups = {
     return response.data;
   },
 
+  assignMembers: async (obj) => {
+    const response = await axios.post(`/users/groups/bulk-assign/`, obj);
+    return response.data;
+  },
+
   updateGroup: async (id, obj) => {
     const response = await axios.patch(`/users/groups/${id}/`, obj);
     return response.data;

@@ -17,6 +17,7 @@
       :isVisible="membverVisible"
       :group="group"
       @close="membverVisible = false"
+      @refresh="this.$emit('refresh')"
     />
     <div class="header col">
       <h3>{{ group?.name }}</h3>
