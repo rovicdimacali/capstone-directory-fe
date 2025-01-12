@@ -14,8 +14,9 @@
       <DataTable :value="logs" tableStyle="min-width: 50rem; font-size: 13px">
         <Column field="action" header="Activity"></Column>
 
-        <Column field="actor_name" header="Actor"></Column>
-        <Column header="Program" style="text-transform: capitalize">
+        <Column field="actor_name" header="User"></Column>
+        <Column field="user.role" header="Role"></Column>
+        <Column header="Date" style="text-transform: capitalize">
           <template #body="slotProps">
             {{ formatDate(slotProps.data.created_at) }}
           </template></Column

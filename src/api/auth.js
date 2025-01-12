@@ -6,6 +6,11 @@ export const auth = {
     return response.data;
   },
 
+  otp: async (obj) => {
+    const response = await axios.post("/users/student-register-otp/", obj);
+    return response.data;
+  },
+
   register: async (obj) => {
     const response = await axios.post("/users/student-register/", obj);
     return response.data;

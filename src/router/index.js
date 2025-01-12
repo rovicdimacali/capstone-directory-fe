@@ -6,6 +6,7 @@ import resetpassword from "@/views/resetpassword.vue";
 import home from "@/views/applayouts/home.vue";
 import applayout from "@/views/applayout.vue";
 import upload from "@/views/applayouts/upload.vue";
+import termsofuse from "@/views/termsofuse.vue";
 
 import { adminroutes } from "./adminroutes";
 
@@ -71,6 +72,14 @@ const router = createRouter({
       path: "/register",
       name: "register",
       component: register,
+      meta: {
+        requiresAuth: null,
+      },
+    },
+    {
+      path: "/terms-of-use",
+      name: "termsofuse",
+      component: termsofuse,
       meta: {
         requiresAuth: null,
       },

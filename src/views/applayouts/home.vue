@@ -1,5 +1,5 @@
 <template>
-  <banner :title="'Capstone Directory'" />
+  <banner :title="'Capstone/Thesis Directory'" />
   <dashboard v-if="shouldDisplayDashboard" :all="allCount" :best="bestCount" />
   <dataview
     :projects="projects"

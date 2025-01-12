@@ -228,6 +228,23 @@
       </div>
       <div class="input-container col-5">
         <label for="source_code"
+          >Tags <span><small>(Press ENTER to separate tags.)</small></span
+          ><span style="color: red">*</span></label
+        >
+
+        <AutoComplete
+          v-model="uploadForm.tags"
+          inputId="multiple-ac-2"
+          multiple
+          fluid
+          :typeahead="false"
+        />
+        <small v-if="validationErrors?.tags" style="color: red">{{
+          validationErrors?.tags
+        }}</small>
+      </div>
+      <div class="input-container col-5">
+        <label for="source_code"
           >Source Code <span><small>(Git Link)</small></span
           ><span style="color: red">*</span></label
         >
@@ -302,6 +319,7 @@ export default {
         full_document: null,
         pubmat: null,
         approval_form: null,
+        tags: [],
         source_code: null,
         members: [],
         date_published: null,
@@ -340,6 +358,7 @@ export default {
       full_document: { required: true },
       acm_paper: { required: true },
       pubmat: { required: true },
+      tags: { required: true },
       source_code: { required: true },
       approval_form: { required: true },
       date_published: { required: true },
@@ -498,6 +517,9 @@ export default {
               ),
             pubmat: Yup.string().required("Pubmat is required"),
             approval_form: Yup.string().nullable(), // optional
+            tags: Yup.array()
+              .of(Yup.string().required("Each tag must be a string"))
+              .min(1, "At least one tag is required"),
             source_code: Yup.string().required("Source code is required"),
             approval_form: Yup.string().required("Source code is required"),
             date_published: Yup.date().required("Date published is required"),

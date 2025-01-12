@@ -12,7 +12,11 @@
     </div>
 
     <div
-      v-if="this.role === 'student' || this.role === null"
+      v-if="
+        (this.role === 'student' || this.role === null) &&
+        this.$route.fullPath !==
+          '/capstone-directory?page=0&is_approved=true&is_ip_registered=true'
+      "
       class="actions-container wrap"
       style="gap: 5px"
     >
@@ -39,7 +43,14 @@
         raised
       />
     </div>
-    <div v-else class="actions-container wrap" style="gap: 5px">
+    <div
+      v-else-if="
+        this.$route.fullPath !==
+        '/capstone-directory?page=0&is_approved=true&is_ip_registered=true'
+      "
+      class="actions-container wrap"
+      style="gap: 5px"
+    >
       <a :href="project?.full_document" target="_blank"
         ><Button
           label="Full Paper"
@@ -130,6 +141,16 @@
         text
         raised
       />
+    </div>
+    <div v-else class="actions-container wrap" style="gap: 5px">
+      <a :href="project?.ip_registration" target="_blank"
+        ><Button
+          text
+          label="IP Registration"
+          severity="contrast"
+          class="action-btn"
+          raised
+      /></a>
     </div>
   </div>
 </template>
@@ -346,6 +367,7 @@ export default {
 
   mounted() {
     this.role = localStorage.getItem("role");
+    console.log(this.$route.fullPath);
   },
 };
 </script>

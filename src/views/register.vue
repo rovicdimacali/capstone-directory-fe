@@ -1,5 +1,13 @@
 <template>
   <Toast />
+  <otpdialog
+    v-if="otpVisible"
+    :isVisible="otpVisible"
+    :registrationForm="registrationForm"
+    @close="otpVisible = false"
+    @submit="register"
+    @resend="otpSend"
+  />
   <div class="user-auth">
     <div class="user-auth-box col">
       <div class="header">
@@ -20,7 +28,7 @@
         </small>
         <small v-else-if="error" style="color: red">{{ error }}</small>
       </div>
-      <form class="col-10" @submit.prevent="register">
+      <form class="col-10" @submit.prevent="otpSend">
         <InputText
           v-model="registrationForm.first_name"
           class="input-user-auth"
@@ -74,10 +82,13 @@
 <script>
 import * as Yup from "yup";
 import { auth } from "@/api/auth";
+import otpdialog from "@/components/register/dialogs/otpdialog.vue";
 
 export default {
+  components: { otpdialog },
   data() {
     return {
+      otpVisible: false,
       registrationForm: {
         first_name: null,
         last_name: null,
@@ -156,23 +167,18 @@ export default {
       }
     },
 
-    async register() {
+    async otpSend() {
       this.isLoading = true;
-
       if (await this.validateForm()) {
         try {
-          await auth.register(this.registrationForm);
+          await auth.otp({ email: this.registrationForm.email });
           this.$toast.add({
             severity: "success",
-            summary: "Registered Successfully.",
-            detail: "Redirecting to login",
+            summary: "OTP was sent to your email",
             life: 3000,
           });
 
-          // Wait for 3 seconds before redirecting
-          setTimeout(() => {
-            this.$router.push("/login");
-          }, 3000);
+          this.otpVisible = true;
         } catch (error) {
           this.error = error.response?.data?.message
             ? error.response?.data?.message
@@ -180,8 +186,9 @@ export default {
         } finally {
           this.isLoading = false;
         }
+      } else {
+        this.isLoading = false;
       }
-      this.isLoading = false;
     },
   },
 };

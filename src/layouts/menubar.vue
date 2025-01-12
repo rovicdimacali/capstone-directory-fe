@@ -11,10 +11,10 @@
         <router-link to="/capstone-directory?page=0&is_approved=true"
           >Home</router-link
         >
-        <!-- <router-link
+        <router-link
           to="/capstone-directory?page=0&is_approved=true&is_ip_registered=true"
           >IP-Registered</router-link
-        > -->
+        >
         <router-link
           v-if="role === 'student' || role === 'administrator'"
           to="/upload"
