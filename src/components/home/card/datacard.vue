@@ -396,6 +396,8 @@ export default {
   },
 
   mounted() {
+    console.log(this.project);
+
     this.role = localStorage.getItem("role");
   },
 };

@@ -11,7 +11,7 @@
       }
     "
   >
-    <div class="search-input col-5">
+    <div class="search-input col-5" style="margin-block: 10px">
       <InputText
         v-model="search"
         placeholder="Search by title, keywords, date (YYYY-MM-DD), or academic year"
@@ -19,11 +19,11 @@
       />
     </div>
 
-    <div v-if="projects?.length" class="wrap">
+    <div v-if="archives?.length" class="wrap" style="gap: 10px">
       <datacard
-        v-for="project in projects"
-        :key="project.id"
-        :project="project"
+        v-for="archive in archives"
+        :key="archive.id"
+        :project="archive"
         :archived="true"
         @refresh="
           fetchArchives(
@@ -52,8 +52,9 @@
 <script>
 import { capstone } from "@/api/capstone";
 import debounce from "lodash/debounce";
-
+import datacard from "../card/datacard.vue";
 export default {
+  components: { datacard },
   props: ["isVisible", "project"],
   data() {
     return {
@@ -69,6 +70,8 @@ export default {
       try {
         const response = await capstone.getArchives(page, search);
         this.archives = response.data || [];
+        console.log(response.data);
+
         this.totalCount = response.total_count;
       } catch (error) {}
     },
