@@ -68,8 +68,8 @@ export default {
     async fetchArchives(page, search) {
       try {
         const response = await capstone.getArchives(page, search);
-        this.archives = response.results || [];
-        this.totalCount = response.count;
+        this.archives = response.data || [];
+        this.totalCount = response.total_count;
       } catch (error) {}
     },
 
