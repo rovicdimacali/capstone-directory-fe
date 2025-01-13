@@ -16,6 +16,10 @@
     <div class="header col">
       <h3>{{ project?.title }}</h3>
       <p>{{ project?.date_published }}</p>
+      <p v-if="project?.disapproval_reason">
+        <span style="font-weight: bold">Reject Reason:</span>
+        {{ project?.disapproval_reason }}
+      </p>
     </div>
     <div v-if="!archived">
       <div

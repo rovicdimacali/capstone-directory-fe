@@ -73,10 +73,10 @@ export default {
           .shape({
             email: Yup.string()
               .email("Invalid email format")
-              // .matches(
-              //   /^[a-zA-Z0-9._%+-]+@ust\.edu\.ph$/,
-              //   "Email must be a UST email"
-              // )
+              .matches(
+                /^[a-zA-Z0-9._%+-]+@ust\.edu\.ph$/,
+                "Email must be a UST email"
+              )
               .required("Email is required"),
             password: Yup.string().required("Password is required"),
           })
