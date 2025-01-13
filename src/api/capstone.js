@@ -63,7 +63,7 @@ export const capstone = {
   },
 
   getArchives: async (page = 0, search = "") => {
-    let endpoint = "/capstone-projects/projects/archived-project/";
+    let endpoint = "/capstone-projects/projects/archived-projects/";
     endpoint += `?page=${page + 1}`;
 
     if (search !== "" && search !== null && search !== undefined) {
