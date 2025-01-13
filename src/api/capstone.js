@@ -62,6 +62,18 @@ export const capstone = {
     return response.data;
   },
 
+  getArchives: async (page = 0, search = "") => {
+    let endpoint = "/capstone-projects/projects/archived-project/";
+    endpoint += `?page=${page + 1}`;
+
+    if (search !== "" && search !== null && search !== undefined) {
+      endpoint += `&search=${search}`;
+    }
+
+    const response = await axios.get(endpoint);
+    return response.data;
+  },
+
   getByID: async (id) => {
     const response = await axios.get(`/capstone-projects/projects/${id}/`);
     return response.data;
@@ -87,6 +99,14 @@ export const capstone = {
     return response.data;
   },
 
+  unarchive: async (id) => {
+    const response = await axios.post(
+      `/capstone-projects/projects/unarchive-project/`,
+      { project_id: id }
+    );
+    return response.data;
+  },
+
   approve: async (id) => {
     const response = await axios.post(`/capstone-projects/projects/approve/`, {
       project_id: id,
@@ -95,11 +115,11 @@ export const capstone = {
     return response.data;
   },
 
-  reject: async (id) => {
-    const response = await axios.post(`/capstone-projects/projects/approve/`, {
-      project_id: id,
-      is_approved: false,
-    });
+  reject: async (obj) => {
+    const response = await axios.post(
+      `/capstone-projects/projects/approve/`,
+      obj
+    );
     return response.data;
   },
 

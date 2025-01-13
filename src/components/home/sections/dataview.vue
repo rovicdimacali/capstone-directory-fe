@@ -1,4 +1,9 @@
 <template>
+  <archives
+    v-if="archiveVisible"
+    :isVisible="archiveVisible"
+    @close="archiveVisible = false"
+  />
   <div class="dataview">
     <div class="search-filter-container wrap">
       <div class="search-input col-5">
@@ -38,6 +43,22 @@
         style="max-width: 180px"
       />
     </div>
+    <div
+      v-if="
+        role === 'administrator' ||
+        role === 'capstone coordinator' ||
+        role === 'faculty'
+      "
+      class="row"
+      style="margin-block: 10px; justify-content: end"
+    >
+      <Button
+        label="Archives"
+        icon="pi pi-eye-slash"
+        severity="warn"
+        @click="archiveVisible = true"
+      />
+    </div>
     <div v-if="projects?.length" class="data-container wrap">
       <datacard
         v-for="project in projects"
@@ -54,10 +75,11 @@
 <script>
 import datacard from "../card/datacard.vue";
 import debounce from "lodash/debounce";
+import archives from "../dialogs/archives.vue";
 
 export default {
   props: ["projects"],
-  components: { datacard },
+  components: { datacard, archives },
   data() {
     return {
       selectedSpec: null,
@@ -92,6 +114,8 @@ export default {
         },
       ],
       search: null,
+      archiveVisible: false,
+      role: null,
     };
   },
   methods: {
@@ -116,6 +140,10 @@ export default {
       const query = this.$route.query;
       this.$router.push({ query: { ...query, sort_by: this.selectedSort } });
     },
+  },
+
+  mounted() {
+    this.role = localStorage.getItem("role");
   },
 
   watch: {
