@@ -202,6 +202,8 @@ export default {
     },
 
     unarchiveProject(id) {
+      console.log(id);
+
       this.$confirm.require({
         message: "Are you sure you want to unarchive?",
         header: "Confirmation",

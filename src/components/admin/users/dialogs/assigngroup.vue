@@ -97,13 +97,16 @@ export default {
       if (this.validateForm()) {
         this.isLoading = true;
         try {
-          await users.updateUser(this.user.id, this.userForm);
+          const response = await users.updateUser(this.user.id, this.userForm);
           this.$toast.add({
             severity: "success",
             summary: "User Updated",
             detail: "User assigned successfully!",
             life: 3000,
           });
+
+          localStorage.setItem("group", response.group.name);
+
           this.$emit("submit");
         } catch (error) {
           console.error(error);
