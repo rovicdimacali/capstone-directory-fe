@@ -171,7 +171,7 @@
         severity="contrast"
         class="action-btn"
         raised
-        @click="unarchiveProject"
+        @click="unarchiveProject(project?.id)"
       />
     </div>
   </div>
