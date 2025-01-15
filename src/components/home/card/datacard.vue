@@ -201,7 +201,7 @@ export default {
       return new Intl.DateTimeFormat("en-US", options).format(date);
     },
 
-    deleteProject(id) {
+    unarchiveProject(id) {
       this.$confirm.require({
         message: "Are you sure you want to unarchive?",
         header: "Confirmation",
