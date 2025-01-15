@@ -89,6 +89,8 @@
 <script>
 import menubar from "./menubar.vue";
 import { notification } from "@/api/notifications";
+import { auth } from "@/api/auth";
+
 export default {
   components: { menubar },
   data() {
@@ -129,12 +131,34 @@ export default {
         console.error(error);
       }
     },
+
+    async fetchProfile() {
+      try {
+        const me = await auth.me();
+
+        if (me) {
+          localStorage.setItem("role", me?.role);
+          localStorage.setItem("email", me?.email);
+          localStorage.setItem("course", me?.course);
+          localStorage.setItem("specialization", me?.specialization);
+          localStorage.setItem("first_name", me?.first_name);
+          localStorage.setItem("group", me?.group?.number);
+
+          this.$router.push("/capstone-directory?page=0&is_approved=true");
+        }
+      } catch (error) {
+        this.error = error.response?.data?.message
+          ? error.response?.data?.message
+          : error.response?.data;
+      }
+    },
   },
 
   mounted() {
     // Fetch notifications immediately when mounted
     this.fetchNotifications();
 
+    this.fetchProfile();
     // Start polling every 3 seconds (3000ms)
     this.pollingInterval = setInterval(() => {
       this.fetchNotifications();
