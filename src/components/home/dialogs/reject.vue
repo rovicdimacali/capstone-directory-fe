@@ -62,7 +62,6 @@ export default {
 
   methods: {
     async validateForm() {
-      this.isLoading = true;
       try {
         await Yup.object()
           .shape({
@@ -77,12 +76,11 @@ export default {
         error.inner.forEach((err) => {
           this.validationErrors[err.path] = err.message;
         });
-      } finally {
-        this.isLoading = false;
       }
     },
 
     async rejectProject() {
+      this.isLoading = true;
       try {
         await capstone.reject(this.rejectForm);
         this.$toast.add({
@@ -100,6 +98,8 @@ export default {
           detail: "Project was not rejected successfully.",
           life: 3000,
         });
+      } finally {
+        this.isLoading = false;
       }
     },
 
