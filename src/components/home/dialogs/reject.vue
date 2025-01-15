@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { auth } from "@/api/auth";
+import { capstone } from "@/api/capstone";
 import * as Yup from "yup";
 
 export default {
