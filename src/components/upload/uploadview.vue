@@ -118,19 +118,43 @@
         <small v-if="validationErrors?.acm_paper" style="color: red">{{
           validationErrors?.acm_paper
         }}</small>
+        <div v-if="$route.query.is_edit === 'true'" class="row-5">
+          <small
+            >Link:
+            <a
+              style="color: blue; text-decoration: underline"
+              :href="uploadForm.acm_paper"
+              >{{ uploadForm.acm_paper }}</a
+            ></small
+          >
+        </div>
       </div>
       <div class="input-container col-5">
         <label for="city"
           >Full Document <span style="color: red">*</span></label
         >
-        <InputText
-          id="members"
-          v-model="uploadForm.full_document"
-          placeholder="GDrive Link of Full Document"
+        <FileUpload
+          name="full_document"
+          mode="basic"
+          accept=".pdf"
+          :auto="false"
+          :customUpload="true"
+          @select="onFullPaperFileSelect"
+          :maxFileSize="524288000"
         />
         <small v-if="validationErrors?.full_document" style="color: red">{{
           validationErrors?.full_document
         }}</small>
+        <div v-if="$route.query.is_edit === 'true'" class="row-5">
+          <small
+            >Link:
+            <a
+              style="color: blue; text-decoration: underline"
+              :href="uploadForm.full_document"
+              >{{ uploadForm.full_document }}</a
+            ></small
+          >
+        </div>
       </div>
       <div class="input-container col-5">
         <label for="city">Pubmat <span style="color: red">*</span></label>
@@ -162,6 +186,16 @@
         <small v-if="validationErrors?.pubmat" style="color: red">{{
           validationErrors?.pubmat
         }}</small>
+        <div v-if="$route.query.is_edit === 'true'" class="row-5">
+          <small
+            >Link:
+            <a
+              style="color: blue; text-decoration: underline"
+              :href="uploadForm.pubmat"
+              >{{ uploadForm.pubmat }}</a
+            ></small
+          >
+        </div>
       </div>
       <div class="input-container col-5">
         <label for="city"
@@ -195,6 +229,16 @@
         <small v-if="validationErrors?.approval_form" style="color: red">{{
           validationErrors?.approval_form
         }}</small>
+        <div v-if="$route.query.is_edit === 'true'" class="row-5">
+          <small
+            >Link:
+            <a
+              style="color: blue; text-decoration: underline"
+              :href="uploadForm.approval_form"
+              >{{ uploadForm.approval_form }}</a
+            ></small
+          >
+        </div>
       </div>
       <div class="input-container col-5">
         <label for="city"
@@ -224,6 +268,16 @@
             class="spinner"
           />
           <small v-if="ipName">Uploaded: {{ ipName }}</small>
+        </div>
+        <div v-if="$route.query.is_edit === 'true'" class="row-5">
+          <small
+            >Link:
+            <a
+              style="color: blue; text-decoration: underline"
+              :href="uploadForm.ip_regristration"
+              >{{ uploadForm.ip_regristration }}</a
+            ></small
+          >
         </div>
       </div>
       <div class="input-container col-5">
@@ -256,6 +310,16 @@
         <small v-if="validationErrors?.source_code" style="color: red">{{
           validationErrors?.source_code
         }}</small>
+        <div v-if="$route.query.is_edit === 'true'" class="row-5">
+          <small
+            >Link:
+            <a
+              style="color: blue; text-decoration: underline"
+              :href="uploadForm.source_code"
+              >{{ uploadForm.source_code }}</a
+            ></small
+          >
+        </div>
       </div>
       <div class="input-container col-5">
         <label for="course">Program <span style="color: red">*</span></label>
@@ -385,6 +449,10 @@ export default {
       this.uploadForm.acm_paper = event.files[0];
     },
 
+    onFullPaperFileSelect(event) {
+      this.uploadForm.full_document = event.files[0];
+    },
+
     async fetchProject(id) {
       try {
         const response = await capstone.getByID(id);
@@ -400,11 +468,11 @@ export default {
 
         // Create a copy of the response without the keyword field
         const filteredResponse = { ...response };
-        delete filteredResponse.keywords;
 
         // Assign other properties to uploadForm
         Object.assign(this.uploadForm, {
           ...filteredResponse,
+          tags: filteredResponse.keywords,
           members: filteredResponse.members || [],
           date_published: new Date(filteredResponse.date_published),
         });
@@ -508,12 +576,26 @@ export default {
             capstone_group_id: Yup.string().nullable(), // optional
             title: Yup.string().required("Title is required"),
             ip_regristration: Yup.string().nullable(), // optional
-            acm_paper: Yup.string().required("ACM Paper is required"),
-            full_document: Yup.string()
+            acm_paper: Yup.mixed()
+              .required("ACM Paper is required")
+              .test(
+                "fileTypeOrUrl",
+                "ACM Paper must be a PDF file or a valid URL string",
+                (value) =>
+                  !!value &&
+                  ((typeof value === "string" && value.startsWith("http")) || // string URL
+                    (value instanceof File && value.type === "application/pdf")) // File object
+              ),
+
+            full_document: Yup.mixed()
               .required("Full document is required")
-              .matches(
-                /^https:\/\/drive\.google\.com\/.+$/,
-                "Full document must be a valid Google Drive link"
+              .test(
+                "fileTypeOrUrl",
+                "Full document must be a PDF file or a valid URL string",
+                (value) =>
+                  !!value &&
+                  ((typeof value === "string" && value.startsWith("http")) || // string URL
+                    (value instanceof File && value.type === "application/pdf")) // File object
               ),
             pubmat: Yup.string().required("Pubmat is required"),
             approval_form: Yup.string().nullable(), // optional
@@ -613,6 +695,10 @@ export default {
         this.isLoading = false;
       }
     },
+    preventRefresh(event) {
+      event.preventDefault();
+      event.returnValue = ""; // Required for modern browsers
+    },
   },
   async mounted() {
     this.generateAcademicYears();
@@ -625,7 +711,19 @@ export default {
     this.uploadForm.specialization = localStorage.getItem("specialization");
     console.log(this.uploadForm.course);
   },
+  beforeDestroy() {
+    window.removeEventListener("beforeunload", this.preventRefresh);
+  },
+
   watch: {
+    isLoading(newValue) {
+      if (newValue) {
+        window.addEventListener("beforeunload", this.preventRefresh);
+      } else {
+        window.removeEventListener("beforeunload", this.preventRefresh);
+      }
+    },
+
     selectedGroup: {
       handler(newValue) {
         this.uploadForm.members[0] = newValue.group_members[0]
