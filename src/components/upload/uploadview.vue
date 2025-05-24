@@ -133,15 +133,19 @@
         <label for="city"
           >Full Document <span style="color: red">*</span></label
         >
-        <FileUpload
-          name="full_document"
-          mode="basic"
-          accept=".pdf"
-          :auto="false"
-          :customUpload="true"
-          @select="onFullPaperFileSelect"
-          :maxFileSize="524288000"
-        />
+        <div class="upload-row row" style="gap: 10px; align-items: center">
+          <div class="col">
+            <FileUpload
+              name="full_document"
+              mode="basic"
+              accept=".pdf"
+              :auto="false"
+              :customUpload="true"
+              @select="onFullPaperFileSelect"
+              :maxFileSize="524288000"
+            />
+          </div>
+        </div>
         <small v-if="validationErrors?.full_document" style="color: red">{{
           validationErrors?.full_document
         }}</small>
