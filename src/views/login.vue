@@ -114,6 +114,7 @@ export default {
               localStorage.setItem("specialization", me?.specialization);
               localStorage.setItem("first_name", me?.first_name);
               localStorage.setItem("group", me?.group?.number);
+              localStorage.setItem("academic_year", me?.group?.academic_year);
 
               this.$router.push("/capstone-directory?page=0&is_approved=true");
             }

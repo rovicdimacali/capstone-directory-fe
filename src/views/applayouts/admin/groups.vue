@@ -23,7 +23,7 @@ export default {
   methods: {
     async fetchGroups(search, course) {
       try {
-        const response = await groups.getGroups();
+        const response = await groups.getGroups(search, course);
         this.groups = response || [];
       } catch (error) {
         console.error(error);
@@ -31,55 +31,46 @@ export default {
     },
   },
 
-  mounted() {
-    this.fetchGroups();
-  },
-
   watch: {
-    // "$route.query.search": {
-    //   handler(newSearch) {
-    //     if (newSearch === null || newSearch === undefined) {
-    //       const { query, ...route } = this.$route;
-    //       delete query.search;
-    //       this.$router.push({ ...route, query });
-    //       this.fetchUsers(
-    //         0,
-    //         null,
-    //         this.$route.query.course ? this.$route.query.course : null,
-    //         this.$route.query.role ? this.$route.query.role : null
-    //       );
-    //     } else {
-    //       this.fetchUsers(
-    //         0,
-    //         newSearch ? newSearch : "",
-    //         this.$route.query.course ? this.$route.query.course : null,
-    //         this.$route.query.role ? this.$route.query.role : null
-    //       );
-    //     }
-    //   },
-    // },
-    // "$route.query.course": {
-    //   handler(newCourse) {
-    //     if (newCourse === null || newCourse === undefined) {
-    //       const { query, ...route } = this.$route;
-    //       delete query.course;
-    //       this.$router.push({ ...route, query });
-    //       this.fetchUsers(
-    //         0,
-    //         this.$route.query.search ? this.$route.query.search : null,
-    //         null,
-    //         this.$route.query.role ? this.$route.query.role : null
-    //       );
-    //     } else {
-    //       this.fetchUsers(
-    //         0,
-    //         this.$route.query.search ? this.$route.query.search : null,
-    //         newCourse ? newCourse : "",
-    //         this.$route.query.role ? this.$route.query.role : null
-    //       );
-    //     }
-    //   },
-    // },
+    "$route.query.search": {
+      handler(newSearch) {
+        if (newSearch === null || newSearch === undefined) {
+          const { query, ...route } = this.$route;
+          delete query.search;
+          this.$router.push({ ...route, query });
+          this.fetchGroups(
+            null,
+            this.$route.query.course ? this.$route.query.course : null
+          );
+        } else {
+          this.fetchGroups(
+            newSearch,
+            this.$route.query.course ? this.$route.query.course : null
+          );
+        }
+      },
+      immediate: true,
+    },
+    "$route.query.course": {
+      handler(newCourse) {
+        if (newCourse === null || newCourse === undefined) {
+          console.log("pumasok");
+          const { query, ...route } = this.$route;
+          delete query.course;
+          this.$router.push({ ...route, query });
+          this.fetchGroups(
+            this.$route.query.search ? this.$route.query.search : null,
+            null
+          );
+        } else {
+          this.fetchGroups(
+            this.$route.query.search ? this.$route.query.search : null,
+            newCourse
+          );
+        }
+      },
+      immediate: true,
+    },
   },
 };
 </script>

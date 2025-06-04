@@ -1,13 +1,24 @@
 import { instance as axios } from "@/utils/instance";
 
 export const groups = {
-  getGroups: async () => {
-    const response = await axios.get("users/groups/");
+  getGroups: async (search, course) => {
+    const params = new URLSearchParams();
+
+    if (search) {
+      params.append("search", search);
+    }
+
+    if (course) {
+      params.append("course", course);
+    }
+
+    const endpoint = `/users/groups/?${params.toString()}`;
+    const response = await axios.get(endpoint);
     return response.data;
   },
 
   getGroup: async (id) => {
-    const response = await axios.get(`users/groups/${id}/`);
+    const response = await axios.get(`/users/groups/${id}/`);
     return response.data;
   },
 

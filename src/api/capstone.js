@@ -71,6 +71,13 @@ export const capstone = {
     return response.data;
   },
 
+  getApprovals: async () => {
+    const response = await axios.get(
+      "/capstone-projects/projects/?is_approved=pending"
+    );
+    return response.data;
+  },
+
   getArchives: async (page = 0, search = "") => {
     let endpoint = "/capstone-projects/projects/archived-projects/";
     endpoint += `?page=${page + 1}`;

@@ -94,6 +94,7 @@
           v-model="uploadForm.academic_year"
           :options="academic_years"
           placeholder="Academic Year"
+          :disabled="role === 'student'"
         />
         <small v-if="validationErrors?.academic_year" style="color: red">{{
           validationErrors?.academic_year
@@ -161,7 +162,9 @@
         </div>
       </div>
       <div class="input-container col-5">
-        <label for="city">Pubmat <span style="color: red">*</span></label>
+        <label for="city"
+          >Pubmat (5MB Max Size) <span style="color: red">*</span></label
+        >
         <div class="upload-row row" style="gap: 10px; align-items: center">
           <div class="col">
             <FileUpload
@@ -713,6 +716,12 @@ export default {
     this.role = localStorage.getItem("role");
     this.uploadForm.course = localStorage.getItem("course");
     this.uploadForm.specialization = localStorage.getItem("specialization");
+    console.log("role", this.role);
+
+    if (this.role === "student") {
+      this.uploadForm.academic_year = localStorage.getItem("academic_year");
+    }
+
     console.log(this.uploadForm.course);
   },
   beforeDestroy() {

@@ -22,13 +22,24 @@
         >
         <router-link
           v-if="role === 'student' || role === 'administrator'"
-          :to="`/capstone-directory?page=0&is_approved=pending&course=${course}`"
-          >Approvals</router-link
-        >
+          :to="`/capstone-directory?page=0&is_approved=pending${
+            role === 'student' && course ? `&course=${course}` : ''
+          }`"
+          style="position: relative"
+          >Pending Submissions
+          <Badge
+            :value="approvalCount"
+            style="
+              position: absolute;
+              top: 50%;
+              transform: translateY(-50%);
+              right: 30px;
+            "
+        /></router-link>
         <router-link
           v-if="role === 'student' || role === 'administrator'"
           :to="`/capstone-directory?page=0&is_approved=false&course=${course}`"
-          >Rejects</router-link
+          >Declined</router-link
         >
       </div>
       <div class="admin-links col">
@@ -66,6 +77,7 @@
 
 <script>
 import changepassword from "@/components/menubar/dialogs/changepassword.vue";
+import { capstone } from "@/api/capstone";
 export default {
   components: { changepassword },
   data() {
@@ -74,6 +86,7 @@ export default {
       token: null,
       course: null,
       changeVisible: false,
+      approvalCount: null,
     };
   },
   methods: {
@@ -97,12 +110,22 @@ export default {
         reject: () => {},
       });
     },
+
+    async fetchApprovals() {
+      try {
+        const response = await capstone.getApprovals();
+        this.approvalCount = response.count;
+      } catch (error) {
+        console.error(error);
+      }
+    },
   },
 
   mounted() {
     this.role = localStorage.getItem("role");
     this.token = localStorage.getItem("token");
     this.course = localStorage.getItem("course");
+    this.fetchApprovals();
   },
 
   watch: {
