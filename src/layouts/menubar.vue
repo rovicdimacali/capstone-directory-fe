@@ -28,6 +28,7 @@
           style="position: relative"
           >Pending Submissions
           <Badge
+            v-if="role === 'administrator'"
             :value="approvalCount"
             style="
               position: absolute;
