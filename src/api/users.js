@@ -26,7 +26,7 @@ export const users = {
 
   getSpecificUsers: async (course) => {
     const response = await axios.get(
-      `/users/user-view/${course.toLowerCase()}-users/`
+      `/users/user-view/${course.toLowerCase()}-users/?has_group=false`
     );
     return response.data;
   },

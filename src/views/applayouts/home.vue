@@ -77,7 +77,8 @@ export default {
       is_ip_registered,
       course,
       specialization,
-      sort_by
+      sort_by,
+      academic_year
     ) {
       try {
         const response = await capstone.get(
@@ -88,7 +89,8 @@ export default {
           is_ip_registered,
           course,
           specialization,
-          sort_by
+          sort_by,
+          academic_year
         );
         this.totalCount = response.count;
         this.projects = response.results;
@@ -130,7 +132,10 @@ export default {
           this.$route.query.specialization
             ? this.$route.query.specialization
             : null,
-          this.$route.query.sort_by ? this.$route.query.sort_by : null
+          this.$route.query.sort_by ? this.$route.query.sort_by : null,
+          this.$route.query.academic_year
+            ? this.$route.query.academic_year
+            : null
         );
       },
       immediate: true,

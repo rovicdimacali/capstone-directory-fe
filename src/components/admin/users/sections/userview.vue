@@ -278,6 +278,13 @@ export default {
     this.email = localStorage.getItem("email");
 
     if (this.role === "capstone coordinator") {
+      this.selectedCourse = localStorage.getItem("course");
+      if (this.selectedCourse) {
+        this.handleCourseChange();
+      }
+    }
+
+    if (this.role === "capstone coordinator") {
       this.roles = ["student", "faculty"];
     } else if (this.role === "administrator") {
       this.roles = [

@@ -9,7 +9,8 @@ export const capstone = {
     is_ip_registered = "",
     course = "",
     specialization = "",
-    sort_by = ""
+    sort_by = "",
+    academic_year = ""
   ) => {
     let endpoint = "/capstone-projects/projects/";
     endpoint += `?page=${page + 1}`;
@@ -56,6 +57,14 @@ export const capstone = {
 
     if (sort_by !== "" && sort_by !== null && sort_by !== undefined) {
       endpoint += `&sort_by=${sort_by}`;
+    }
+
+    if (
+      academic_year !== "" &&
+      academic_year !== null &&
+      academic_year !== undefined
+    ) {
+      endpoint += `&academic_year=${academic_year}`;
     }
 
     const response = await axios.get(endpoint);

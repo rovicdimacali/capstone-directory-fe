@@ -57,6 +57,7 @@ export default {
       selectedCourse: null,
       courses: ["IT", "CS", "IS"],
       createVisible: false,
+      role: null,
     };
   },
 
@@ -70,6 +71,18 @@ export default {
       const query = this.$route.query;
       this.$router.push({ query: { ...query, course: this.selectedCourse } });
     },
+  },
+
+  mounted() {
+    this.role = localStorage.getItem("role");
+
+    if (this.role === "capstone coordinator") {
+      this.selectedCourse = localStorage.getItem("course");
+
+      if (this.selectedCourse) {
+        this.handleCourseChange();
+      }
+    }
   },
 
   watch: {
