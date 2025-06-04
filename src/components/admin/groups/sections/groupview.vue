@@ -106,6 +106,7 @@ export default {
   mounted() {
     this.role = localStorage.getItem("role");
 
+    this.generateAcademicYears();
     if (this.role === "capstone coordinator") {
       this.selectedCourse = localStorage.getItem("course");
 

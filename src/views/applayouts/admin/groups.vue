@@ -21,7 +21,7 @@ export default {
   },
 
   methods: {
-    async fetchGroups(search, course) {
+    async fetchGroups(search, course, academic_year) {
       try {
         const response = await groups.getGroups(search, course, academic_year);
         this.groups = response || [];
