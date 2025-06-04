@@ -1,7 +1,7 @@
 import { instance as axios } from "@/utils/instance";
 
 export const groups = {
-  getGroups: async (search, course) => {
+  getGroups: async (search, course, academic_year) => {
     const params = new URLSearchParams();
 
     if (search) {
@@ -10,6 +10,10 @@ export const groups = {
 
     if (course) {
       params.append("course", course);
+    }
+
+    if (academic_year) {
+      params.append("academic_year", academic_year);
     }
 
     const endpoint = `/users/groups/?${params.toString()}`;

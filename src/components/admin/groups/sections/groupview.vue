@@ -22,6 +22,15 @@
         <small>Press Enter to Search</small>
       </div>
       <Select
+        v-model="selectedAcademicYear"
+        :options="academic_years"
+        placeholder="Academic Year"
+        class="dropdown"
+        @change="handleAYChange"
+        showClear
+        style="max-width: 200px"
+      />
+      <Select
         v-model="selectedCourse"
         :options="courses"
         placeholder="Select Program"
@@ -58,13 +67,34 @@ export default {
       courses: ["IT", "CS", "IS"],
       createVisible: false,
       role: null,
+      academic_years: null,
+      selectedAcademicYear: null,
     };
   },
 
   methods: {
+    generateAcademicYears() {
+      const currentYear = new Date().getFullYear();
+      const academicYears = [];
+
+      for (let year = 2014; year < currentYear; year++) {
+        academicYears.push(`${year}-${year + 1}`);
+      }
+
+      this.academic_years = academicYears;
+      console.log(academicYears);
+    },
+
     handleSearch() {
       const query = this.$route.query;
       this.$router.push({ query: { ...query, search: this.search } });
+    },
+
+    handleAYChange() {
+      const query = this.$route.query;
+      this.$router.push({
+        query: { ...query, academic_year: this.selectedAcademicYear },
+      });
     },
 
     handleCourseChange() {
@@ -96,6 +126,23 @@ export default {
       },
       immediate: true,
     },
+
+    "$route.query.academic_year": {
+      handler(newAY) {
+        if (newAY) {
+          this.selectedAcademicYear = newAY;
+        } else {
+          // Create a copy of the query object
+          const newQuery = { ...this.$route.query };
+          // Remove the `course` and `specialization` keys
+          delete newQuery.academic_year;
+          // Update the route
+          this.$router.push({ query: newQuery });
+        }
+      },
+      immediate: true,
+    },
+
     "$route.query.course": {
       handler(newCourse) {
         if (newCourse === null || newCourse === undefined) {
