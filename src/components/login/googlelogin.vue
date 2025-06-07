@@ -12,19 +12,31 @@ export default {
   },
 
   mounted() {
-    window.google.accounts.id.initialize({
-      client_id: this.clientId,
-      callback: this.handleCredentialResponse,
-      ux_mode: "popup",
-    });
+    const waitForGoogle = () => {
+      if (
+        window.google &&
+        window.google.accounts &&
+        window.google.accounts.id
+      ) {
+        window.google.accounts.id.initialize({
+          client_id: this.clientId,
+          callback: this.handleCredentialResponse,
+          ux_mode: "popup",
+        });
 
-    window.google.accounts.id.renderButton(
-      document.getElementById("google-signin-button"),
-      {
-        theme: "outline",
-        size: "large",
+        window.google.accounts.id.renderButton(
+          document.getElementById("google-signin-button"),
+          {
+            theme: "outline",
+            size: "large",
+          }
+        );
+      } else {
+        setTimeout(waitForGoogle, 100); // wait until script is ready
       }
-    );
+    };
+
+    waitForGoogle();
   },
 
   methods: {
