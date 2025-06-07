@@ -6,6 +6,11 @@ export const auth = {
     return response.data;
   },
 
+  googleLogin: async (obj) => {
+    const response = await axios.post("/users/google-login/", obj);
+    return response.data;
+  },
+
   otp: async (obj) => {
     const response = await axios.post("/users/student-register-otp/", obj);
     return response.data;

@@ -33,6 +33,11 @@
           placeholder="Password"
         />
         <Button type="SUBMIT" label="LOGIN" :loading="isLoading" />
+        <googlelogin
+          @error="showError"
+          @loading="isLoading = true"
+          @stopLoading="isLoading = false"
+        />
         <RouterLink to="/forgot-password"
           ><small>Forgot Password?</small></RouterLink
         >
@@ -44,10 +49,12 @@
 </template>
 
 <script>
+import googlelogin from "@/components/login/googlelogin.vue";
 import * as Yup from "yup";
 import { auth } from "@/api/auth";
 
 export default {
+  components: { googlelogin },
   data() {
     return {
       loginForm: {
@@ -128,6 +135,10 @@ export default {
         }
       }
       this.isLoading = false;
+    },
+
+    showError(msg) {
+      this.error = msg;
     },
   },
 };
