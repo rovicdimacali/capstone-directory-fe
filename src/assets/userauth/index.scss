@@ -63,6 +63,7 @@
       width: 100%;
       max-height: 400px;
       overflow-y: auto;
+      overflow-x: hidden;
       padding-inline: 5px;
 
       &::-webkit-scrollbar {
