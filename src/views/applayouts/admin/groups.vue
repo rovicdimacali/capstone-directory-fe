@@ -61,7 +61,6 @@ export default {
     "$route.query.course": {
       handler(newCourse) {
         if (newCourse === null || newCourse === undefined) {
-          console.log("pumasok");
           const { query, ...route } = this.$route;
           delete query.course;
           this.$router.push({ ...route, query });

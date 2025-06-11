@@ -33,32 +33,29 @@
           </template></Select
         >
       </div>
-      <div v-if="role !== 'student'" class="input-container col-5">
-        <label for="members">Members</label>
-        <InputText
-          id="members"
-          v-model="uploadForm.members[0]"
-          placeholder="Member 1"
-        />
-        <InputText
-          id="members"
-          v-model="uploadForm.members[1]"
-          placeholder="Member 2"
-        />
-        <InputText
-          id="members"
-          v-model="uploadForm.members[2]"
-          placeholder="Member 3"
-        />
-        <InputText
-          id="members"
-          v-model="uploadForm.members[3]"
-          placeholder="Member 4"
-        />
-        <small v-if="validationErrors?.members" style="color: red">{{
-          validationErrors?.members
-        }}</small>
+
+      <div
+        v-if="max_group_members && role !== 'student'"
+        class="input-container col-5"
+      >
+        <label for="members">Members <span style="color: red">*</span></label>
+
+        <div v-for="(member, index) in dynamicMemberCount" :key="index">
+          <InputText
+            :id="`member-${index}`"
+            v-model="uploadForm.members[index]"
+            :placeholder="`Member ${index + 1}`"
+          />
+        </div>
+
+        <small v-if="validationErrors?.members" style="color: red">
+          {{ validationErrors.members }}
+        </small>
       </div>
+      <Skeleton
+        v-else-if="!max_group_members && role !== 'student'"
+        style="width: 300px; height: 400px"
+      />
       <div class="input-container col-5">
         <label for="title">Title <span style="color: red">*</span></label>
         <InputText
@@ -306,6 +303,27 @@
       </div>
       <div class="input-container col-5">
         <label for="source_code"
+          >Source Code (ZIP File) <span style="color: red">*</span></label
+        >
+        <div class="upload-row row" style="gap: 10px; align-items: center">
+          <div class="col">
+            <FileUpload
+              name="source_code"
+              mode="basic"
+              accept=".zip"
+              :auto="false"
+              :customUpload="true"
+              @select="onSourceCodeSelect"
+              :maxFileSize="524288000"
+            />
+          </div>
+        </div>
+        <small v-if="validationErrors?.source_code" style="color: red">{{
+          validationErrors?.source_code
+        }}</small>
+      </div>
+      <!-- <div class="input-container col-5">
+        <label for="source_code"
           >Source Code <span><small>(Git Link)</small></span
           ><span style="color: red">*</span></label
         >
@@ -327,7 +345,7 @@
             ></small
           >
         </div>
-      </div>
+      </div> -->
       <div class="input-container col-5">
         <label for="course">Program <span style="color: red">*</span></label>
         <Select
@@ -420,6 +438,7 @@ export default {
       isLoading: false,
       validationErrors: null,
       role: null,
+      max_group_members: null,
     };
   },
 
@@ -439,6 +458,19 @@ export default {
     },
   },
 
+  computed: {
+    dynamicMemberCount() {
+      const count = parseInt(this.max_group_members) || 0;
+      // Extend uploadForm.members array if needed
+      while (this.uploadForm.members.length < count) {
+        this.uploadForm.members.push("");
+      }
+      // Trim if there's excess
+      this.uploadForm.members = this.uploadForm.members.slice(0, count);
+      return this.uploadForm.members;
+    },
+  },
+
   methods: {
     generateAcademicYears() {
       const currentYear = new Date().getFullYear();
@@ -449,7 +481,6 @@ export default {
       }
 
       this.academic_years = academicYears;
-      console.log(academicYears);
     },
 
     onFileSelect(event) {
@@ -458,6 +489,10 @@ export default {
 
     onFullPaperFileSelect(event) {
       this.uploadForm.full_document = event.files[0];
+    },
+
+    onSourceCodeSelect(event) {
+      this.uploadForm.source_code = event.files[0];
     },
 
     async fetchProject(id) {
@@ -626,8 +661,6 @@ export default {
         this.validationErrors = {}; // Clear previous errors
         return true; // Form is valid
       } catch (error) {
-        console.log(error);
-
         this.validationErrors = {};
         error.inner.forEach((err) => {
           this.validationErrors[err.path] = err.message;
@@ -706,8 +739,18 @@ export default {
       event.preventDefault();
       event.returnValue = ""; // Required for modern browsers
     },
+
+    async getMaxMembers() {
+      try {
+        const response = await groups.getMaxMembers();
+        this.max_group_members = response.max_group_members;
+      } catch (error) {
+        console.error(error);
+      }
+    },
   },
   async mounted() {
+    this.getMaxMembers();
     this.generateAcademicYears();
     this.fetchGroups();
     if (this.$route.query.is_edit === "true") {
@@ -716,13 +759,10 @@ export default {
     this.role = localStorage.getItem("role");
     this.uploadForm.course = localStorage.getItem("course");
     this.uploadForm.specialization = localStorage.getItem("specialization");
-    console.log("role", this.role);
 
     if (this.role === "student") {
       this.uploadForm.academic_year = localStorage.getItem("academic_year");
     }
-
-    console.log(this.uploadForm.course);
   },
   beforeDestroy() {
     window.removeEventListener("beforeunload", this.preventRefresh);

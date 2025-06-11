@@ -12,6 +12,17 @@
         }
       "
     />
+    <changemaxmembers
+      v-if="changeVisible"
+      :isVisible="changeVisible"
+      :group="group"
+      @close="changeVisible = false"
+      @submit="
+        changeVisible = false;
+        getMaxMembers();
+      "
+      :max="max_group_members"
+    />
     <div class="search-filter-container wrap">
       <div class="search-input col-5">
         <InputText
@@ -39,6 +50,11 @@
         showClear
       />
       <Button label="Create Group" @click="createVisible = true" />
+      <Button
+        icon="pi pi-cog"
+        @click="changeVisible = true"
+        :disabled="max_group_members === null"
+      />
     </div>
     <div v-if="groups?.length" class="data-container wrap">
       <groupcard
@@ -57,18 +73,23 @@
 <script>
 import groupcard from "../card/groupcard.vue";
 import creategroup from "../dialogs/creategroup.vue";
+import changemaxmembers from "../dialogs/changemaxmembers.vue";
+import { groups } from "@/api/groups";
+
 export default {
   props: ["groups"],
-  components: { groupcard, creategroup },
+  components: { groupcard, creategroup, changemaxmembers },
   data() {
     return {
       search: null,
       selectedCourse: null,
       courses: ["IT", "CS", "IS"],
       createVisible: false,
+      changeVisible: false,
       role: null,
       academic_years: null,
       selectedAcademicYear: null,
+      max_group_members: null,
     };
   },
 
@@ -82,7 +103,6 @@ export default {
       }
 
       this.academic_years = academicYears;
-      console.log(academicYears);
     },
 
     handleSearch() {
@@ -101,11 +121,20 @@ export default {
       const query = this.$route.query;
       this.$router.push({ query: { ...query, course: this.selectedCourse } });
     },
+
+    async getMaxMembers() {
+      try {
+        const response = await groups.getMaxMembers();
+        this.max_group_members = response.max_group_members;
+      } catch (error) {
+        console.error(error);
+      }
+    },
   },
 
   mounted() {
     this.role = localStorage.getItem("role");
-
+    this.getMaxMembers();
     this.generateAcademicYears();
     if (this.role === "capstone coordinator") {
       this.selectedCourse = localStorage.getItem("course");

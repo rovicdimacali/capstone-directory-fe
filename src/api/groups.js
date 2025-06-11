@@ -45,4 +45,14 @@ export const groups = {
     const response = await axios.delete(`/users/groups/${id}/`);
     return response.data;
   },
+
+  getMaxMembers: async () => {
+    const response = await axios.get("/settings/max-group-members/");
+    return response.data;
+  },
+
+  updateMaxMembers: async (obj) => {
+    const response = await axios.post("/settings/max-group-members/", obj);
+    return response.data;
+  },
 };

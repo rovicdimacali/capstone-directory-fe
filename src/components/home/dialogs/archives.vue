@@ -70,7 +70,6 @@ export default {
       try {
         const response = await capstone.getArchives(page, search);
         this.archives = response.data || [];
-        console.log(response.data);
 
         this.totalCount = response.total_count;
       } catch (error) {}

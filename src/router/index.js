@@ -90,7 +90,6 @@ const router = createRouter({
       component: resetpassword,
       beforeEnter: (to, from, next) => {
         // Check if the query parameter 'token' exists
-        console.log(to);
 
         if (!to.query.token) {
           // Redirect to the login page if the token is missing

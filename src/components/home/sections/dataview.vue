@@ -139,7 +139,6 @@ export default {
       }
 
       this.academic_years = academicYears;
-      console.log(academicYears);
     },
 
     handleSearch: debounce(function () {
