@@ -51,6 +51,9 @@
       />
       <Button label="Create Group" @click="createVisible = true" />
       <Button
+        v-if="
+          this.role === 'capstone coordinator' && this.role === 'administrator'
+        "
         icon="pi pi-cog"
         @click="changeVisible = true"
         :disabled="max_group_members === null"
