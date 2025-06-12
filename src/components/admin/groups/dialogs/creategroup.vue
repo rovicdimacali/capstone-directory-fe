@@ -158,7 +158,7 @@ export default {
         await Yup.object()
           .shape({
             name: Yup.string().required("Group Name is required"),
-            max_group_members: Yup.number()
+            max_members: Yup.number()
               .typeError("Max Members must be a number")
               .required("Max Members is required")
               .min(1, "Max Members must be greater than 0")
