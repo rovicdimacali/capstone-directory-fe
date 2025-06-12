@@ -50,14 +50,14 @@
         showClear
       />
       <Button label="Create Group" @click="createVisible = true" />
-      <Button
+      <!-- <Button
         v-if="
           this.role === 'capstone coordinator' && this.role === 'administrator'
         "
         icon="pi pi-cog"
         @click="changeVisible = true"
         :disabled="max_group_members === null"
-      />
+      /> -->
     </div>
     <div v-if="groups?.length" class="data-container wrap">
       <groupcard

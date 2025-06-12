@@ -23,6 +23,7 @@
           placeholder="Select a Group"
           style="max-width: 550px"
           filter
+          @change="dynamicMemberCount"
         >
           <template #option="slotProps">
             <div class="flex items-center">
@@ -35,27 +36,22 @@
       </div>
 
       <div
-        v-if="max_group_members && role !== 'student'"
+        v-if="selectedGroup?.max_members && role !== 'student'"
         class="input-container col-5"
       >
         <label for="members">Members <span style="color: red">*</span></label>
 
-        <div v-for="(member, index) in dynamicMemberCount" :key="index">
+        <div v-for="(member, index) in selectedGroup?.max_members" :key="index">
           <InputText
             :id="`member-${index}`"
             v-model="uploadForm.members[index]"
             :placeholder="`Member ${index + 1}`"
           />
         </div>
-
         <small v-if="validationErrors?.members" style="color: red">
           {{ validationErrors.members }}
         </small>
       </div>
-      <Skeleton
-        v-else-if="!max_group_members && role !== 'student'"
-        style="width: 300px; height: 400px"
-      />
       <div class="input-container col-5">
         <label for="title">Title <span style="color: red">*</span></label>
         <InputText
@@ -99,7 +95,9 @@
       </div>
 
       <div class="input-container col-5">
-        <label for="city">ACM Paper <span style="color: red">*</span></label>
+        <label for="city"
+          >ACM Paper (5MB Max Size) <span style="color: red">*</span></label
+        >
         <div class="upload-row row" style="gap: 10px; align-items: center">
           <div class="col">
             <FileUpload
@@ -129,7 +127,8 @@
       </div>
       <div class="input-container col-5">
         <label for="city"
-          >Full Document <span style="color: red">*</span></label
+          >Full Document (520MB Max Size)
+          <span style="color: red">*</span></label
         >
         <div class="upload-row row" style="gap: 10px; align-items: center">
           <div class="col">
@@ -203,7 +202,7 @@
       </div>
       <div class="input-container col-5">
         <label for="city"
-          >Approval Form <span style="color: red">*</span></label
+          >Approval Form (5MB Max Size) <span style="color: red">*</span></label
         >
         <div class="upload-row row" style="gap: 10px; align-items: center">
           <div class="col">
@@ -246,7 +245,8 @@
       </div>
       <div class="input-container col-5">
         <label for="city"
-          >IP Registration <span style="color: red">*</span></label
+          >IP Registration (5MB Max Size)
+          <span style="color: red">*</span></label
         >
         <div class="upload-row row" style="gap: 10px; align-items: center">
           <div class="col">
@@ -303,7 +303,8 @@
       </div>
       <div class="input-container col-5">
         <label for="source_code"
-          >Source Code (ZIP File) <span style="color: red">*</span></label
+          >Source Code (ZIP File 5MB Max Size)
+          <span style="color: red">*</span></label
         >
         <div class="upload-row row" style="gap: 10px; align-items: center">
           <div class="col">
@@ -322,6 +323,14 @@
           validationErrors?.source_code
         }}</small>
       </div>
+      <small
+        >Link:
+        <a
+          style="color: blue; text-decoration: underline"
+          :href="uploadForm.source_code"
+          >{{ uploadForm.source_code }}</a
+        ></small
+      >
       <!-- <div class="input-container col-5">
         <label for="source_code"
           >Source Code <span><small>(Git Link)</small></span
@@ -458,18 +467,7 @@ export default {
     },
   },
 
-  computed: {
-    dynamicMemberCount() {
-      const count = parseInt(this.max_group_members) || 0;
-      // Extend uploadForm.members array if needed
-      while (this.uploadForm.members.length < count) {
-        this.uploadForm.members.push("");
-      }
-      // Trim if there's excess
-      this.uploadForm.members = this.uploadForm.members.slice(0, count);
-      return this.uploadForm.members;
-    },
-  },
+  computed: {},
 
   methods: {
     generateAcademicYears() {
@@ -527,8 +525,8 @@ export default {
       try {
         const response = await groups.getGroup(groupID);
 
-        const { id, name, group_members } = response;
-        this.selectedGroup = { id, name, group_members };
+        const { id, name, group_members, max_members } = response;
+        this.selectedGroup = { id, name, group_members, max_members };
       } catch (error) {
         console.error(error);
       }
@@ -542,6 +540,7 @@ export default {
           id: item.id,
           name: item.name,
           group_members: item.group_members,
+          max_members: item.max_members,
         }));
       } catch (error) {
         console.error(error);
@@ -608,6 +607,19 @@ export default {
         console.error("Failed to upload file: ", error);
       } finally {
         this.isIPUploading = false;
+      }
+    },
+
+    dynamicMemberCount() {
+      if (this.selectedGroup?.max_members) {
+        const count = parseInt(this.selectedGroup.max_members) || 0;
+        // Extend uploadForm.members array if needed
+        while (this.uploadForm.members.length < count) {
+          this.uploadForm.members.push("");
+        }
+        // Trim if there's excess
+        this.uploadForm.members = this.uploadForm.members.slice(0, count);
+        this.max_group_members = this.uploadForm.members;
       }
     },
 
@@ -739,18 +751,8 @@ export default {
       event.preventDefault();
       event.returnValue = ""; // Required for modern browsers
     },
-
-    async getMaxMembers() {
-      try {
-        const response = await groups.getMaxMembers();
-        this.max_group_members = response.max_group_members;
-      } catch (error) {
-        console.error(error);
-      }
-    },
   },
   async mounted() {
-    this.getMaxMembers();
     this.generateAcademicYears();
     this.fetchGroups();
     if (this.$route.query.is_edit === "true") {
@@ -779,19 +781,14 @@ export default {
 
     selectedGroup: {
       handler(newValue) {
-        this.uploadForm.members[0] = newValue.group_members[0]
-          ? `${newValue.group_members[0].first_name} ${newValue.group_members[0].last_name}`
-          : "";
-        this.uploadForm.members[1] = newValue.group_members[1]
-          ? `${newValue.group_members[1].first_name} ${newValue.group_members[1].last_name}`
-          : "";
-        this.uploadForm.members[2] = newValue.group_members[2]
-          ? `${newValue.group_members[2].first_name} ${newValue.group_members[2].last_name}`
-          : "";
-        this.uploadForm.members[3] = newValue.group_members[3]
-          ? `${newValue.group_members[3].first_name} ${newValue.group_members[3].last_name}`
-          : "";
+        console.log("val", newValue);
+
+        this.uploadForm.members =
+          newValue?.group_members?.map((member) => {
+            return `${member.first_name} ${member.last_name}`;
+          }) || [];
       },
+      immediate: true,
     },
     "$route.query.is_edit": {
       handler(newValue) {

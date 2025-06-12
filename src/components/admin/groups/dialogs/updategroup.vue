@@ -32,6 +32,21 @@
         class="input-container col-5"
         style="flex-grow: 1; flex-basis: 350px"
       >
+        <label for="max_members"
+          >No. of members <span style="color: red">*</span></label
+        >
+        <InputNumber
+          v-model="groupForm.max_members"
+          placeholder="Dela Cruz, Delos Santos, Ramos, Reyes"
+        />
+        <small v-if="validationErrors.max_members" style="color: red">{{
+          validationErrors.max_members
+        }}</small>
+      </div>
+      <div
+        class="input-container col-5"
+        style="flex-grow: 1; flex-basis: 350px"
+      >
         <label for="academic_year"
           >Academic Year <span style="color: red">*</span></label
         >
@@ -116,6 +131,7 @@ export default {
   validations: {
     groupForm: {
       name: { required: true, minLength: 1, maxLength: 255 },
+      max_members: { required: true, minLength: 1, maxLength: 255 },
       academic_year: { required: false, maxLength: 255 },
       course: { required: true, maxLength: 255 },
       specialization: { required: true, maxLength: 255 },
@@ -138,6 +154,11 @@ export default {
         await Yup.object()
           .shape({
             name: Yup.string().required("Group Name is required"),
+            max_group_members: Yup.number()
+              .typeError("Max Members must be a number")
+              .required("Max Members is required")
+              .min(1, "Max Members must be greater than 0")
+              .max(255, "Max Members must be less than or equal to 255"),
             academic_year: Yup.string()
               .required("Academic Year is required")
               .matches(
