@@ -49,7 +49,7 @@ const router = createRouter({
         ...adminroutes,
       ],
       meta: {
-        requiresAuth: false,
+        requiresAuth: true,
       },
     },
     {

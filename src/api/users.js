@@ -53,4 +53,12 @@ export const users = {
     const response = await axios.delete(`/users/user-view/${id}/`);
     return response.data;
   },
+
+  unassign: async (groupID, obj) => {
+    const response = await axios.post(
+      `/users/groups/${groupID}/remove-member/`,
+      obj
+    );
+    return response.data;
+  },
 };

@@ -92,7 +92,7 @@ export default {
   data() {
     return {
       selectedSpec: null,
-      selectedCourse: null,
+      selectedCourse: localStorage.getItem("course") || null,
       selectedSort: null,
       courses: ["IT", "CS", "IS"],
       specializations: {

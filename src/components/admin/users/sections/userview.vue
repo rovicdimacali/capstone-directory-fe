@@ -178,7 +178,7 @@ export default {
   data() {
     return {
       search: null,
-      selectedCourse: null,
+      selectedCourse: localStorage.getItem("course") || null,
       selectedRole: null,
       courses: ["IT", "CS", "IS"],
       createVisible: false,

@@ -512,7 +512,7 @@ export default {
         // Assign other properties to uploadForm
         Object.assign(this.uploadForm, {
           ...filteredResponse,
-          tags: filteredResponse.keywords,
+          tags: filteredResponse.tags,
           members: filteredResponse.members || [],
           date_published: new Date(filteredResponse.date_published),
         });
@@ -718,6 +718,7 @@ export default {
               acm_paper: null,
               full_document: null,
               pubmat: null,
+              tags: [],
               approval_form: null,
               source_code: null,
               members: [],

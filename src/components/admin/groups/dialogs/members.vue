@@ -169,7 +169,7 @@ export default {
         },
         accept: async () => {
           try {
-            await users.updateUser(member.id, { group: null });
+            await users.unassign(this.group.id, { id: member.id });
             this.$toast.add({
               severity: "success",
               summary: "User Unassigned Successfully.",

@@ -71,7 +71,7 @@
             raised
         /></a>
         <Button
-          label="Details"
+          label="Files"
           class="action-btn"
           severity="success"
           @click="detailsVisible = true"
@@ -91,7 +91,10 @@
         />
 
         <Button
-          v-if="role === 'administrator'"
+          v-if="
+            role === 'administrator' &&
+            this.$route.query.is_approved !== 'pending'
+          "
           label="Archive"
           class="action-btn"
           @click="deleteProject(project?.id)"

@@ -218,7 +218,6 @@ export default {
   mounted() {
     this.generateAcademicYears();
     this.groupForm = this.group;
-    this.groupForm.name = this.groupForm.name.replace(/\s\(\d{4}-\d{4}\)/, "");
   },
 
   watch: {
