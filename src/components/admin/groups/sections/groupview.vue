@@ -50,6 +50,11 @@
         showClear
       />
       <Button label="Create Group" @click="createVisible = true" />
+      <a
+        href="https://cdn.ustcicsdirectory.site/files/usergrouptemplate_upload.xlsx"
+      >
+        <Button label="Download Template" />
+      </a>
       <!-- <Button
         v-if="
           this.role === 'capstone coordinator' && this.role === 'administrator'
